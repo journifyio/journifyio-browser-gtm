@@ -108,7 +108,18 @@ const group = (journify) => {
 };
 
 const track = (journify) => {
+    if (!dataHasField("eventName")) {
+        return fail('`Event name` setting is required when calling `track`');
+    }
 
+    let properties = null;
+    if (dataHasField("eventProperties")) {
+        properties = makeTableMap(data.eventProperties || [], 'propertyKey', 'propertyValue');
+    }
+
+    journify.track(data.eventName, properties)
+        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Track call, context', ctx))
+        .catch((e) => fail(e));
 };
 
 const page = (journify) => {
