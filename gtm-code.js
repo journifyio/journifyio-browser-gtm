@@ -29,10 +29,13 @@ const onsuccess = () => {
             identify(journify);
             break;
         case 'group':
+            group(journify);
             break;
         case 'track':
+            track(journify);
             break;
         case 'page':
+            page(journify);
             break;
     }
 
@@ -62,7 +65,7 @@ const load = (journify) => {
     }
 
     journify.load(settings);
-    log(LOG_PREFIX + 'Success: load journify with settings', settings);
+    log(LOG_PREFIX + 'Success: loading Journify SDK');
 };
 
 const identify = (journify) => {
@@ -85,10 +88,31 @@ const identify = (journify) => {
     }
 
     journify.identify(data.userId, traits,  externalId)
-        .then((ctx) => {
-            log('Identify success: ', ctx);
-        })
+        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
         .catch((e) => fail(e));
+};
+
+const group = (journify) => {
+    if (!dataHasField("groupId")) {
+        return fail('`Group ID` setting is required when calling `group`');
+    }
+
+    let traits = null;
+    if (dataHasField("groupTraits")) {
+        traits = makeTableMap(data.groupTraits || [], 'traitKey', 'traitValue');
+    }
+
+    journify.group(data.groupId, traits)
+        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Group call, context', ctx))
+        .catch((e) => fail(e));
+};
+
+const track = (journify) => {
+
+};
+
+const page = (journify) => {
+
 };
 
 const dataHasField = (fieldKey) => {
