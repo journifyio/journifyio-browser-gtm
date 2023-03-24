@@ -123,7 +123,19 @@ const track = (journify) => {
 };
 
 const page = (journify) => {
+    let pageName = null;
+    if (dataHasField("pageName")) {
+        pageName = data.pageName;
+    }
 
+    let properties = null;
+    if (dataHasField("pageProperties")) {
+        properties = makeTableMap(data.pageProperties || [], 'propertyKey', 'propertyValue');
+    }
+
+    journify.page(pageName, properties)
+        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Page call, context', ctx))
+        .catch((e) => fail(e));
 };
 
 const dataHasField = (fieldKey) => {
