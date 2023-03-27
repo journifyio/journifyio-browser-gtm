@@ -141,21 +141,11 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "SELECT",
+    "type": "TEXT",
     "name": "externalIdCollection",
     "displayName": "External ID collection (optional)",
-    "macrosInSelect": true,
-    "selectItems": [
-      {
-        "value": "accounts",
-        "displayValue": "accounts"
-      },
-      {
-        "value": "users",
-        "displayValue": "users"
-      }
-    ],
     "simpleValueType": true,
+    "canBeEmptyString": true,
     "enablingConditions": [
       {
         "paramName": "tagType",
@@ -590,6 +580,4 @@ scenarios: []
 
 ___NOTES___
 
-Created on 3/24/2023, 1:52:22 PM
-
-
+Created on 3/27/2023, 12:31:36 PM
