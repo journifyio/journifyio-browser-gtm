@@ -14,6 +14,7 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "Journify browser SDK",
+  "categories": ["SALES", "LEAD_GENERATION", "EMAIL_MARKETING"],
   "brand": {
     "id": "brand_dummy",
     "displayName": "",
