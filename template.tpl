@@ -1,12 +1,4 @@
-﻿___TERMS_OF_SERVICE___
-
-By creating or modifying this file you agree to Google Tag Manager's Community
-Template Gallery Developer Terms of Service available at
-https://developers.google.com/tag-manager/gallery-tos (or such other URL as
-Google may provide), as modified from time to time.
-
-
-___INFO___
+﻿___INFO___
 
 {
   "type": "TAG",
@@ -14,7 +6,11 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "Journify browser SDK",
-  "categories": ["SALES", "LEAD_GENERATION", "EMAIL_MARKETING"],
+  "categories": [
+    "SALES",
+    "LEAD_GENERATION",
+    "EMAIL_MARKETING"
+  ],
   "brand": {
     "id": "brand_dummy",
     "displayName": "",
@@ -314,7 +310,8 @@ const makeTableMap = require('makeTableMap');
 const copyFromWindow = require('copyFromWindow');
 
 // constants
-const JS_URL = 'https://unpkg.com/@journifyio/js-sdk@latest/dist/_bundles/journifyio.min.js';
+const VERSION = 'v0.0.82';
+const JS_URL = 'https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@'+VERSION+'/dist/_bundles/journifyio.min.js';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 
@@ -559,7 +556,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://unpkg.com/@journifyio/js-sdk@latest/dist/_bundles/journifyio.min.js"
+                "string": "https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@*"
               }
             ]
           }
