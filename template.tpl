@@ -310,7 +310,7 @@ const makeTableMap = require('makeTableMap');
 const copyFromWindow = require('copyFromWindow');
 
 // constants
-const VERSION = 'v0.0.82';
+const VERSION = 'v0.0.83';
 const JS_URL = 'https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@'+VERSION+'/dist/_bundles/journifyio.min.js';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
