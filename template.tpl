@@ -5,7 +5,6 @@ Template Gallery Developer Terms of Service available at
 https://developers.google.com/tag-manager/gallery-tos (or such other URL as
 Google may provide), as modified from time to time.
 
-
 ___INFO___
 
 {
@@ -14,6 +13,11 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "Journify browser SDK",
+  "categories": [
+    "SALES",
+    "LEAD_GENERATION",
+    "EMAIL_MARKETING"
+  ],
   "brand": {
     "id": "brand_dummy",
     "displayName": "",
@@ -313,7 +317,8 @@ const makeTableMap = require('makeTableMap');
 const copyFromWindow = require('copyFromWindow');
 
 // constants
-const JS_URL = 'https://unpkg.com/@journifyio/js-sdk@latest/dist/_bundles/journifyio.min.js';
+const VERSION = 'v0.0.83';
+const JS_URL = 'https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@'+VERSION+'/dist/_bundles/journifyio.min.js';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 
@@ -396,8 +401,8 @@ const identify = (journify) => {
     }
 
     journify.identify(data.userId, traits,  externalId)
-      .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
-      .catch((e) => fail(e));
+        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
+        .catch((e) => fail(e));
 };
 
 const group = (journify) => {
@@ -558,7 +563,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://unpkg.com/@journifyio/js-sdk@latest/dist/_bundles/journifyio.min.js"
+                "string": "https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@*"
               }
             ]
           }
@@ -580,6 +585,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 4/24/2023, 1:01:07 PM
+Created on 3/28/2023, 1:47:47 PM
 
 
