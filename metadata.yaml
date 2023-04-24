@@ -1,7 +1,5 @@
 homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-template"
 versions:
-  - sha: dbe3569d56593323517feba0388156845cd6a533
-    changeNotes: Update sdk version to v0.0.83
-  - sha: 97a69ee7555bd46da52c660755850c7ce1ffc2c3
+  - sha: 05807f2a314642a33e56d7a9b1d51030a3a13ea2
     changeNotes: Initial release
