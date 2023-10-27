@@ -1,2 +1,2 @@
-# journifyio-browser-gtm-template
+# journifyio-browser-gtm
 The Journify browser template for Google Tag manager.
