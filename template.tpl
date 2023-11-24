@@ -34,7 +34,7 @@ ___TEMPLATE_PARAMETERS___
 [
   {
     "type": "SELECT",
-    "name": "tagType",
+    "name": "tag_type",
     "displayName": "Tag type",
     "macrosInSelect": true,
     "selectItems": [
@@ -59,7 +59,7 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "writeKey",
+    "name": "write_key",
     "displayName": "Write Key",
     "simpleValueType": true,
     "notSetText": "Write key is required",
@@ -71,17 +71,17 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "userId",
-    "displayName": "User ID",
+    "name": "user_id",
+    "displayName": "User id",
     "simpleValueType": true,
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "identify",
         "type": "EQUALS"
       }
     ],
-    "notSetText": "User ID is required",
+    "notSetText": "User id is required",
     "valueValidators": [
       {
         "type": "NON_EMPTY"
@@ -90,26 +90,26 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "SIMPLE_TABLE",
-    "name": "userTraits",
+    "name": "user_traits",
     "displayName": "User traits (optional)",
     "simpleTableColumns": [
       {
         "defaultValue": "",
         "displayName": "Trait key",
-        "name": "traitKey",
+        "name": "trait_key",
         "type": "TEXT"
       },
       {
         "defaultValue": "",
         "displayName": "Trait value",
-        "name": "traitValue",
+        "name": "trait_value",
         "type": "TEXT"
       }
     ],
     "newRowButtonText": "Add Trait",
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "identify",
         "type": "EQUALS"
       }
@@ -117,13 +117,13 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "externalIdValue",
-    "displayName": "External ID value (optional)",
+    "name": "external_id_value",
+    "displayName": "External id value (optional)",
     "simpleValueType": true,
     "canBeEmptyString": true,
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "identify",
         "type": "EQUALS"
       }
@@ -131,13 +131,13 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "externalIdType",
-    "displayName": "External ID type (optional)",
+    "name": "external_id_type",
+    "displayName": "External id type (optional)",
     "simpleValueType": true,
     "canBeEmptyString": true,
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "identify",
         "type": "EQUALS"
       }
@@ -145,13 +145,13 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "externalIdCollection",
-    "displayName": "External ID collection (optional)",
+    "name": "external_id_collection",
+    "displayName": "External id collection (optional)",
     "simpleValueType": true,
     "canBeEmptyString": true,
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "identify",
         "type": "EQUALS"
       }
@@ -159,12 +159,12 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "groupId",
-    "displayName": "Group ID",
+    "name": "group_id",
+    "displayName": "Group id",
     "simpleValueType": true,
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "group",
         "type": "EQUALS"
       }
@@ -174,76 +174,57 @@ ___TEMPLATE_PARAMETERS___
         "type": "NON_EMPTY"
       }
     ],
-    "notSetText": "Group ID is required"
+    "notSetText": "Group id is required"
   },
   {
     "type": "SIMPLE_TABLE",
-    "name": "groupTraits",
-    "displayName": "Group Traits (optional)",
+    "name": "group_traits",
+    "displayName": "Group traits (optional)",
     "simpleTableColumns": [
       {
         "defaultValue": "",
-        "displayName": "Trait Key",
-        "name": "traitKey",
+        "displayName": "Trait key",
+        "name": "trait_key",
         "type": "TEXT"
       },
       {
         "defaultValue": "",
-        "displayName": "Trait Value",
-        "name": "traitValue",
+        "displayName": "Trait value",
+        "name": "trait_value",
         "type": "TEXT"
       }
     ],
     "newRowButtonText": "Add Group Trait",
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "group",
         "type": "EQUALS"
       }
     ]
   },
   {
-    "type": "TEXT",
-    "name": "eventName",
-    "displayName": "Event name",
-    "simpleValueType": true,
-    "notSetText": "Event name is required",
-    "enablingConditions": [
-      {
-        "paramName": "tagType",
-        "paramValue": "track",
-        "type": "EQUALS"
-      }
-    ],
-    "valueValidators": [
-      {
-        "type": "NON_EMPTY"
-      }
-    ]
-  },
-  {
     "type": "SIMPLE_TABLE",
-    "name": "eventProperties",
-    "displayName": "Event Properties (optional)",
+    "name": "event_properties",
+    "displayName": "Event properties (optional)",
     "simpleTableColumns": [
       {
         "defaultValue": "",
-        "displayName": "Property Key",
-        "name": "propertyKey",
+        "displayName": "Property key",
+        "name": "property_key",
         "type": "TEXT"
       },
       {
         "defaultValue": "",
-        "displayName": "Property Value",
-        "name": "propertyValue",
+        "displayName": "Property value",
+        "name": "property_value",
         "type": "TEXT"
       }
     ],
     "newRowButtonText": "Add property",
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "track",
         "type": "EQUALS"
       }
@@ -251,13 +232,13 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "pageName",
-    "displayName": "Page Name (optional)",
+    "name": "page_name",
+    "displayName": "Page name (optional)",
     "simpleValueType": true,
     "canBeEmptyString": true,
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "page",
         "type": "EQUALS"
       }
@@ -265,26 +246,26 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "SIMPLE_TABLE",
-    "name": "pageProperties",
+    "name": "page_properties",
     "displayName": "Page Properties (optional)",
     "simpleTableColumns": [
       {
         "defaultValue": "",
-        "displayName": "Property Key",
-        "name": "propertyKey",
+        "displayName": "Property key",
+        "name": "property_key",
         "type": "TEXT"
       },
       {
         "defaultValue": "",
-        "displayName": "Property Value",
-        "name": "propertyValue",
+        "displayName": "Property value",
+        "name": "property_value",
         "type": "TEXT"
       }
     ],
-    "newRowButtonText": "Add Property",
+    "newRowButtonText": "Add property",
     "enablingConditions": [
       {
-        "paramName": "tagType",
+        "paramName": "tag_type",
         "paramValue": "page",
         "type": "EQUALS"
       }
@@ -292,14 +273,14 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "cookieDomain",
+    "name": "cookie_domain",
     "displayName": "Cookie domain (optional)",
     "simpleValueType": true,
     "canBeEmptyString": true
   },
   {
     "type": "TEXT",
-    "name": "sessionDurationMin",
+    "name": "session_duration_min",
     "displayName": "Session duration in minutes (optional)",
     "simpleValueType": true,
     "canBeEmptyString": true
@@ -336,7 +317,7 @@ const onsuccess = () => {
 
     load(journify);
 
-    switch (data.tagType) {
+    switch (data.tag_type) {
         case 'identify':
             identify(journify);
             break;
@@ -355,22 +336,22 @@ const onsuccess = () => {
 };
 
 const load = (journify) => {
-    if (!dataHasField("writeKey")) {
-        return fail('`Write Key` setting is required when calling `load`');
+    if (!dataHasField("write_key")) {
+        return fail('`write_key` setting is required when calling `load`');
     }
 
     const settings = {
-        writeKey: data.writeKey,
+        writeKey: data.write_key,
     };
 
-    if (dataHasField("cookieDomain")) {
+    if (dataHasField("cookie_domain")) {
         settings.cookie = {
-            domain: data.cookieDomain,
+            domain: data.cookie_domain,
         };
     }
 
-    if (dataHasField("sessionDurationMin")){
-        const sessionDurationMin = makeNumber(data.sessionDurationMin);
+    if (dataHasField("session_duration_min")){
+        const sessionDurationMin = makeNumber(data.session_duration_min);
         if (typeof sessionDurationMin !== "undefined") {
             settings.sessionDurationMin = sessionDurationMin;
         }
@@ -381,68 +362,64 @@ const load = (journify) => {
 };
 
 const identify = (journify) => {
-    if (!dataHasField("userId")) {
-        return fail('`User ID` setting is required when calling `identify`');
+    if (!dataHasField("user_id")) {
+        return fail('`user_id` setting is required when calling `identify`');
     }
 
     let traits = null;
-    if (dataHasField("userTraits")) {
-        traits = makeTableMap(data.userTraits || [], 'traitKey', 'traitValue');
+    if (dataHasField("user_traits")) {
+        traits = makeTableMap(data.user_traits || [], 'trait_key', 'trait_value');
     }
 
     let externalId = null;
-    if (dataHasField("externalIdValue")) {
+    if (dataHasField("external_id_value")) {
         externalId = {
-            externalId: data.externalIdValue,
-            type: data.externalIdType,
-            collection: data.externalIdCollection,
+            externalId: data.external_id_value,
+            type: data.external_id_type,
+            collection: data.external_id_collection,
         };
     }
 
-    journify.identify(data.userId, traits,  externalId)
+    journify.identify(data.user_id, traits,  externalId)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
         .catch((e) => fail(e));
 };
 
 const group = (journify) => {
-    if (!dataHasField("groupId")) {
-        return fail('`Group ID` setting is required when calling `group`');
+    if (!dataHasField("group_id")) {
+        return fail('`group_id` setting is required when calling `group`');
     }
 
     let traits = null;
-    if (dataHasField("groupTraits")) {
-        traits = makeTableMap(data.groupTraits || [], 'traitKey', 'traitValue');
+    if (dataHasField("group_traits")) {
+        traits = makeTableMap(data.group_traits || [], 'trait_key', 'trait_value');
     }
 
-    journify.group(data.groupId, traits)
+    journify.group(data.group_id, traits)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Group call, context', ctx))
         .catch((e) => fail(e));
 };
 
 const track = (journify) => {
-    if (!dataHasField("eventName")) {
-        return fail('`Event name` setting is required when calling `track`');
-    }
-
     let properties = null;
-    if (dataHasField("eventProperties")) {
-        properties = makeTableMap(data.eventProperties || [], 'propertyKey', 'propertyValue');
+    if (dataHasField("event_properties")) {
+        properties = makeTableMap(data.event_properties || [], 'property_key', 'property_value');
     }
 
-    journify.track(data.eventName, properties)
+    journify.track(data.event, properties)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Track call, context', ctx))
         .catch((e) => fail(e));
 };
 
 const page = (journify) => {
     let pageName = null;
-    if (dataHasField("pageName")) {
-        pageName = data.pageName;
+    if (dataHasField("page_name")) {
+        pageName = data.page_name;
     }
 
     let properties = null;
-    if (dataHasField("pageProperties")) {
-        properties = makeTableMap(data.pageProperties || [], 'propertyKey', 'propertyValue');
+    if (dataHasField("page_properties")) {
+        properties = makeTableMap(data.page_properties || [], 'property_key', 'property_value');
     }
 
     journify.page(pageName, properties)
