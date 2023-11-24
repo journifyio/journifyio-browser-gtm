@@ -1,11 +1,4 @@
-﻿___TERMS_OF_SERVICE___
-
-By creating or modifying this file you agree to Google Tag Manager's Community
-Template Gallery Developer Terms of Service available at
-https://developers.google.com/tag-manager/gallery-tos (or such other URL as
-Google may provide), as modified from time to time.
-
-___INFO___
+﻿___INFO___
 
 {
   "type": "TAG",
@@ -20,7 +13,7 @@ ___INFO___
   "brand": {
     "id": "journifyio",
     "displayName": "Journify",
-    "thumbnail": "data:image/jpeg;base64,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"
+    "thumbnail": "data:image/jpeg;base64,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\u003d\u003d"
   },
   "description": "Capture and sync customer data to any marketing tool.",
   "containerContexts": [
@@ -292,9 +285,11 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 const injectScript = require('injectScript');
 const log = require('logToConsole');
+const JSON = require('JSON');
 const makeNumber = require('makeNumber');
 const makeTableMap = require('makeTableMap');
 const copyFromWindow = require('copyFromWindow');
+const copyFromDataLayer = require('copyFromDataLayer');
 
 // constants
 const VERSION = 'v0.0.83';
@@ -406,7 +401,8 @@ const track = (journify) => {
         properties = makeTableMap(data.event_properties || [], 'property_key', 'property_value');
     }
 
-    journify.track(data.event, properties)
+    const eventName = copyFromDataLayer("event");
+    journify.track(eventName, properties)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Track call, context', ctx))
         .catch((e) => fail(e));
 };
@@ -550,6 +546,39 @@ ___WEB_PERMISSIONS___
       "isEditedByUser": true
     },
     "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "read_data_layer",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "allowedKeys",
+          "value": {
+            "type": 1,
+            "string": "specific"
+          }
+        },
+        {
+          "key": "keyPatterns",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 1,
+                "string": "event"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
   }
 ]
 
@@ -562,5 +591,3 @@ scenarios: []
 ___NOTES___
 
 Created on 3/28/2023, 1:47:47 PM
-
-
