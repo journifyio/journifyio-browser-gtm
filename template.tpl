@@ -204,33 +204,6 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "SIMPLE_TABLE",
-    "name": "event_properties",
-    "displayName": "Event properties (optional)",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Property key",
-        "name": "property_key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Property value",
-        "name": "property_value",
-        "type": "TEXT"
-      }
-    ],
-    "newRowButtonText": "Add property",
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "track",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
     "type": "TEXT",
     "name": "page_name",
     "displayName": "Page name (optional)",
@@ -292,11 +265,11 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 const injectScript = require('injectScript');
 const log = require('logToConsole');
-const JSON = require('JSON');
 const makeNumber = require('makeNumber');
 const makeTableMap = require('makeTableMap');
 const copyFromWindow = require('copyFromWindow');
 const copyFromDataLayer = require('copyFromDataLayer');
+const getType = require('getType');
 
 // constants
 const VERSION = 'v0.0.83';
@@ -403,10 +376,51 @@ const group = (journify) => {
 };
 
 const track = (journify) => {
-    let properties = null;
-    if (dataHasField("event_properties")) {
-        properties = makeTableMap(data.event_properties || [], 'property_key', 'property_value');
+    let properties = {};
+    const propertyKeys = [
+      "currency",
+      "value",
+      "coupon",
+      "payment_type",
+      "items",
+      "shipping_tier",
+      "virtual_currency_name",
+      "group_id",
+      "level_name",
+      "success",
+      "level",
+      "character",
+      "method",
+      "score",
+      "level",
+      "character",
+      "transaction_id",
+      "shipping",
+      "tax",
+      "search_term",
+      "content_type",
+      "content_id",
+      "item_list_id",
+      "item_list_name",
+      "creative_name",
+      "creative_slot",
+      "promotion_id",
+      "promotion_name",
+      "virtual_currency_name",
+      "item_name",
+      "achievement_id",
+    ]; 
+    propertyKeys.forEach((key) => {
+      properties[key] = copyFromDataLayer(key);
+    });
+
+    const ecommerce = copyFromDataLayer("ecommerce");
+    if (getType(ecommerce) == 'object') {
+      for (let key in ecommerce) {
+        properties[key] = ecommerce[key];
+      }
     }
+    
 
     const eventName = copyFromDataLayer("event");
     journify.track(eventName, properties)
@@ -565,19 +579,7 @@ ___WEB_PERMISSIONS___
           "key": "allowedKeys",
           "value": {
             "type": 1,
-            "string": "specific"
-          }
-        },
-        {
-          "key": "keyPatterns",
-          "value": {
-            "type": 2,
-            "listItem": [
-              {
-                "type": 1,
-                "string": "event"
-              }
-            ]
+            "string": "any"
           }
         }
       ]
