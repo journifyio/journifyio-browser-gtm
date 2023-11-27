@@ -420,7 +420,13 @@ const track = (journify) => {
         properties[key] = ecommerce[key];
       }
     }
-    
+
+    const nestedProperties = copyFromDataLayer("properties");
+    if (getType(nestedProperties) == 'object') {
+      for (let key in nestedProperties) {
+        properties[key] = nestedProperties[key];
+      }
+    }
 
     const eventName = copyFromDataLayer("event");
     journify.track(eventName, properties)
