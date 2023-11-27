@@ -71,208 +71,6 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "user_id",
-    "displayName": "User id",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "identify",
-        "type": "EQUALS"
-      }
-    ],
-    "notSetText": "User id is required",
-    "valueValidators": [
-      {
-        "type": "NON_EMPTY"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
-    "name": "user_traits",
-    "displayName": "User traits (optional)",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Trait key",
-        "name": "trait_key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Trait value",
-        "name": "trait_value",
-        "type": "TEXT"
-      }
-    ],
-    "newRowButtonText": "Add Trait",
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "identify",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "external_id_value",
-    "displayName": "External id value (optional)",
-    "simpleValueType": true,
-    "canBeEmptyString": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "identify",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "external_id_type",
-    "displayName": "External id type (optional)",
-    "simpleValueType": true,
-    "canBeEmptyString": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "identify",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "external_id_collection",
-    "displayName": "External id collection (optional)",
-    "simpleValueType": true,
-    "canBeEmptyString": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "identify",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "group_id",
-    "displayName": "Group id",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "group",
-        "type": "EQUALS"
-      }
-    ],
-    "valueValidators": [
-      {
-        "type": "NON_EMPTY"
-      }
-    ],
-    "notSetText": "Group id is required"
-  },
-  {
-    "type": "SIMPLE_TABLE",
-    "name": "group_traits",
-    "displayName": "Group traits (optional)",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Trait key",
-        "name": "trait_key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Trait value",
-        "name": "trait_value",
-        "type": "TEXT"
-      }
-    ],
-    "newRowButtonText": "Add Group Trait",
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "group",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
-    "name": "event_properties",
-    "displayName": "Event properties (optional)",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Property key",
-        "name": "property_key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Property value",
-        "name": "property_value",
-        "type": "TEXT"
-      }
-    ],
-    "newRowButtonText": "Add property",
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "track",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "page_name",
-    "displayName": "Page name (optional)",
-    "simpleValueType": true,
-    "canBeEmptyString": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
-    "name": "page_properties",
-    "displayName": "Page Properties (optional)",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Property key",
-        "name": "property_key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Property value",
-        "name": "property_value",
-        "type": "TEXT"
-      }
-    ],
-    "newRowButtonText": "Add property",
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
     "name": "cookie_domain",
     "displayName": "Cookie domain (optional)",
     "simpleValueType": true,
@@ -292,11 +90,11 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 const injectScript = require('injectScript');
 const log = require('logToConsole');
-const JSON = require('JSON');
 const makeNumber = require('makeNumber');
 const makeTableMap = require('makeTableMap');
 const copyFromWindow = require('copyFromWindow');
 const copyFromDataLayer = require('copyFromDataLayer');
+const getType = require('getType');
 
 // constants
 const VERSION = 'v0.0.83';
@@ -364,48 +162,80 @@ const load = (journify) => {
 };
 
 const identify = (journify) => {
-    if (!dataHasField("user_id")) {
-        return fail('`user_id` setting is required when calling `identify`');
+    const userId = copyFromDataLayer("user_id");
+    if (!userId) {
+        return fail('`user_id` is required when calling `identify`');
     }
 
-    let traits = null;
-    if (dataHasField("user_traits")) {
-        traits = makeTableMap(data.user_traits || [], 'trait_key', 'trait_value');
-    }
+    const traits = copyFromDataLayer("traits") || {};
+    const externalId = copyFromDataLayer("external_id");
 
-    let externalId = null;
-    if (dataHasField("external_id_value")) {
-        externalId = {
-            externalId: data.external_id_value,
-            type: data.external_id_type,
-            collection: data.external_id_collection,
-        };
-    }
-
-    journify.identify(data.user_id, traits,  externalId)
+    journify.identify(userId, traits,  externalId)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
         .catch((e) => fail(e));
 };
 
 const group = (journify) => {
-    if (!dataHasField("group_id")) {
-        return fail('`group_id` setting is required when calling `group`');
+    const groupId = copyFromDataLayer("group_id");
+    if (!groupId) {
+        return fail('`group_id` is required when calling `group`');
     }
 
-    let traits = null;
-    if (dataHasField("group_traits")) {
-        traits = makeTableMap(data.group_traits || [], 'trait_key', 'trait_value');
-    }
+    let traits = copyFromDataLayer("traits") || {};
 
-    journify.group(data.group_id, traits)
+    journify.group(groupId, traits)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Group call, context', ctx))
         .catch((e) => fail(e));
 };
 
 const track = (journify) => {
-    let properties = null;
-    if (dataHasField("event_properties")) {
-        properties = makeTableMap(data.event_properties || [], 'property_key', 'property_value');
+    const keys = [
+        "currency",
+        "value",
+        "coupon",
+        "payment_type",
+        "items",
+        "shipping_tier",
+        "virtual_currency_name",
+        "group_id",
+        "level_name",
+        "success",
+        "level",
+        "character",
+        "method",
+        "score",
+        "level",
+        "character",
+        "transaction_id",
+        "shipping",
+        "tax",
+        "search_term",
+        "content_type",
+        "content_id",
+        "item_list_id",
+        "item_list_name",
+        "creative_name",
+        "creative_slot",
+        "promotion_id",
+        "promotion_name",
+        "virtual_currency_name",
+        "item_name",
+        "achievement_id",
+    ];
+    const properties = copyKeysFromDataLayer(keys);
+
+    const ecommerce = copyFromDataLayer("ecommerce");
+    if (getType(ecommerce) == 'object') {
+        for (let key in ecommerce) {
+            properties[key] = ecommerce[key];
+        }
+    }
+
+    const nestedProperties = copyFromDataLayer("properties");
+    if (getType(nestedProperties) == 'object') {
+        for (let key in nestedProperties) {
+            properties[key] = nestedProperties[key];
+        }
     }
 
     const eventName = copyFromDataLayer("event");
@@ -415,19 +245,21 @@ const track = (journify) => {
 };
 
 const page = (journify) => {
-    let pageName = null;
-    if (dataHasField("page_name")) {
-        pageName = data.page_name;
-    }
+    const pageName = copyFromDataLayer("name");
+    const pageProps = copyFromDataLayer("properties");
 
-    let properties = null;
-    if (dataHasField("page_properties")) {
-        properties = makeTableMap(data.page_properties || [], 'property_key', 'property_value');
-    }
-
-    journify.page(pageName, properties)
+    journify.page(pageName, pageProps)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Page call, context', ctx))
         .catch((e) => fail(e));
+};
+
+const copyKeysFromDataLayer = (keys) => {
+    const copy = {};
+    keys.forEach((key) => {
+        copy[key] = copyFromDataLayer(key);
+    });
+
+    return copy;
 };
 
 const dataHasField = (fieldKey) => {
@@ -565,19 +397,7 @@ ___WEB_PERMISSIONS___
           "key": "allowedKeys",
           "value": {
             "type": 1,
-            "string": "specific"
-          }
-        },
-        {
-          "key": "keyPatterns",
-          "value": {
-            "type": 2,
-            "listItem": [
-              {
-                "type": 1,
-                "string": "event"
-              }
-            ]
+            "string": "any"
           }
         }
       ]
