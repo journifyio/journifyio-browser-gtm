@@ -1,5 +1,5 @@
 homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-template"
 versions:
-  - sha: 82ca3ca87d087b4c53730fe787bf6b99303c4e16
+  - sha: 1a49af3cf36b7cd17c3e85a44161689aa0f94572
     changeNotes: Initial release
