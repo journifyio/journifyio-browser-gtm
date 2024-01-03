@@ -1080,6 +1080,7 @@ const fail = msg => {
 };
 
 const onsuccess = () => {
+
     const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
     if (!journify) {
         return fail('Failed to load the window.journify');
@@ -1198,14 +1199,12 @@ const page = (journify) => {
 
 const dataLayerEvent = (journify) => {
     const eventsMap = getDataLayerMappedEvents();
-    let eventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
     if (!eventName) {
         log(LOG_PREFIX + 'Event name is not defined, skipping event');
         return;
     }
 
     const eventType = eventsMap[eventName];
-
     if (!eventType) {
         log(LOG_PREFIX + 'Event name`'+ eventName +'` is not mapped, skipping event');
         return;
@@ -1232,32 +1231,14 @@ const dataLayerEvent = (journify) => {
 };
 
 const dataLayerIdentify = (journify) => {
-    const userId = copyFromDataLayer('user_id');
+
     if (!userId) {
         return fail('`user_id` is required when calling `identify`');
     }
 
-    const externalId = copyFromDataLayer('external_id');
-    const traits = copyFromDataLayer('traits') || {};
-    const traitsKeys = {
-        'user_data.email_address': 'email',
-        'user_data.phone_number': 'phone',
-        'user_data.first_name': 'firstname',
-        'user_data.last_name': 'lastname',
-        'user_data.street': 'street_address',
-        'user_data.city': 'city',
-        'user_data.region': 'state_code',
-        'user_data.postal_code': 'postal_code',
-        'user_data.country': 'country_code',
-    };
 
-    for (let key in traitsKeys) {
-        const journifyKey = traitsKeys[key];
-        const value = copyFromDataLayer(key);
-        if (value) {
-            traits[journifyKey] = value;
-        }
-    }
+
+
 
     journify.identify(userId, traits,  externalId)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
@@ -1265,12 +1246,9 @@ const dataLayerIdentify = (journify) => {
 };
 
 const dataLayerGroup = (journify) => {
-    const groupId = copyFromDataLayer('group_id');
     if (!groupId) {
         return fail('`group_id` is required when calling `group`');
     }
-
-    let traits = copyFromDataLayer('traits') || {};
 
     journify.group(groupId, traits)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Group call, context', ctx))
@@ -1278,39 +1256,19 @@ const dataLayerGroup = (journify) => {
 };
 
 const dataLayerTrack = (journify, eventName) => {
-    const properties = getAllDataLayerProperties();
-    journify.track(eventName, properties)
+    journify.track(eventName, dataLayerEventProperties)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Track call, context', ctx))
         .catch((e) => fail(e));
 };
 
 const dataLayerPage = (journify) => {
-    let pageName = copyFromDataLayer('name');
     if (!pageName) {
         pageName = readTitle();
     }
 
-    const properties = getAllDataLayerProperties();
-
-    journify.page(pageName, properties)
+    journify.page(pageName, dataLayerEventProperties)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Page call, context', ctx))
         .catch((e) => fail(e));
-};
-
-const getAllDataLayerProperties = () => {
-    const properties = copyKeysFromDataLayer(STANDARD_DATA_LAYER_EVENT_KEYS);
-
-    const ecommerce = copyFromDataLayer('ecommerce');
-    if (getType(ecommerce) == 'object') {
-        copyObj(properties, ecommerce);
-    }
-
-    const nestedProperties = copyFromDataLayer('properties');
-    if (getType(nestedProperties) == 'object') {
-        copyObj(properties, nestedProperties);
-    }
-
-    return properties;
 };
 
 const getDataLayerMappedEvents = () => {
@@ -1363,6 +1321,57 @@ const onfailure = () => {
     return fail('Failed to load the Journify JavaScript library');
 };
 
+// copy data layer variables
+let eventName = null;
+let userId = null;
+let externalId = null;
+let traits = null;
+let pageName = null;
+let groupId = null;
+let dataLayerEventProperties = null;
+
+
+if (data.tag_type == 'data_layer_event') {
+    eventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
+    userId = copyFromDataLayer('user_id');
+    externalId = copyFromDataLayer('external_id');
+    traits = copyFromDataLayer('traits') || {};
+    const traitsKeys = {
+        'user_data.email_address': 'email',
+        'user_data.phone_number': 'phone',
+        'user_data.first_name': 'firstname',
+        'user_data.last_name': 'lastname',
+        'user_data.street': 'street_address',
+        'user_data.city': 'city',
+        'user_data.region': 'state_code',
+        'user_data.postal_code': 'postal_code',
+        'user_data.country': 'country_code',
+    };
+
+    pageName = copyFromDataLayer('name');
+
+    for (let key in traitsKeys) {
+        const journifyKey = traitsKeys[key];
+        const value = copyFromDataLayer(key);
+        if (value) {
+            traits[journifyKey] = value;
+        }
+    }
+
+    groupId = copyFromDataLayer('group_id');
+
+    dataLayerEventProperties = copyKeysFromDataLayer(STANDARD_DATA_LAYER_EVENT_KEYS);
+
+    const ecommerce = copyFromDataLayer('ecommerce');
+    if (getType(ecommerce) == 'object') {
+        copyObj(dataLayerEventProperties, ecommerce);
+    }
+
+    const nestedProperties = copyFromDataLayer('properties');
+    if (getType(nestedProperties) == 'object') {
+        copyObj(dataLayerEventProperties, nestedProperties);
+    }
+}
 
 injectScript(JS_URL, onsuccess, onfailure, 'journify');
 
