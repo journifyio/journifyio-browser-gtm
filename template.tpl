@@ -84,8 +84,7 @@ ___TEMPLATE_PARAMETERS___
         "displayValue": "data layer event"
       }
     ],
-    "simpleValueType": true,
-    "enablingConditions": []
+    "simpleValueType": true
   },
   {
     "type": "TEXT",
@@ -188,7 +187,6 @@ ___TEMPLATE_PARAMETERS___
         "type": "EQUALS"
       }
     ],
-    "defaultValue": "",
     "valueValidators": [
       {
         "type": "NON_EMPTY"
@@ -232,8 +230,7 @@ ___TEMPLATE_PARAMETERS___
         "paramValue": "page",
         "type": "EQUALS"
       }
-    ],
-    "valueValidators": []
+    ]
   },
   {
     "type": "SIMPLE_TABLE",
@@ -913,6 +910,12 @@ ___TEMPLATE_PARAMETERS___
     "subParams": [
       {
         "type": "TEXT",
+        "name": "api_host",
+        "displayName": "API host",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
         "name": "cookie_domain",
         "displayName": "Cookie domain (optional)",
         "simpleValueType": true
@@ -1120,8 +1123,13 @@ const load = (journify) => {
 
     const settings = {
         writeKey: data.write_key,
-        apiHost: "http://localhost:8082"
     };
+
+    if (dataHasField('api_host')) {
+        settings.cookie = {
+            apiHost: data.api_host,
+        };
+    }
 
     if (dataHasField('cookie_domain')) {
         settings.cookie = {
