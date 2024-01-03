@@ -911,7 +911,7 @@ ___TEMPLATE_PARAMETERS___
       {
         "type": "TEXT",
         "name": "api_host",
-        "displayName": "API host",
+        "displayName": "API host (optional)",
         "simpleValueType": true
       },
       {
