@@ -45,848 +45,852 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "CHECKBOX",
-    "name": "use_manual_mapings",
-    "checkboxText": "Use manual mappings",
+    "type": "TEXT",
+    "name": "sdk_version",
+    "displayName": "Journify SDK version",
     "simpleValueType": true,
-    "defaultValue": true
+    "notSetText": "SDK version is required",
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ],
+    "defaultValue": "latest"
   },
   {
-    "type": "GROUP",
-    "name": "manual_mappings",
-    "displayName": "Manual mappings",
-    "groupStyle": "NO_ZIPPY",
-    "subParams": [
+    "type": "SELECT",
+    "name": "tag_type",
+    "displayName": "Tag type",
+    "macrosInSelect": false,
+    "selectItems": [
       {
-        "type": "SELECT",
-        "name": "tag_type",
-        "displayName": "Tag type",
-        "macrosInSelect": false,
-        "selectItems": [
-          {
-            "value": "identify",
-            "displayValue": "identify"
-          },
-          {
-            "value": "group",
-            "displayValue": "group"
-          },
-          {
-            "value": "track",
-            "displayValue": "track"
-          },
-          {
-            "value": "page",
-            "displayValue": "page"
-          }
-        ],
-        "simpleValueType": true,
-        "enablingConditions": []
+        "value": "identify",
+        "displayValue": "identify"
       },
       {
-        "type": "TEXT",
-        "name": "user_id",
-        "displayName": "User ID",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "identify",
-            "type": "EQUALS"
-          }
-        ],
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ]
+        "value": "group",
+        "displayValue": "group"
       },
       {
-        "type": "SIMPLE_TABLE",
-        "name": "user_traits",
-        "displayName": "User traits",
-        "simpleTableColumns": [
-          {
-            "defaultValue": "",
-            "displayName": "Key",
-            "name": "key",
-            "type": "TEXT"
-          },
-          {
-            "defaultValue": "",
-            "displayName": "Value",
-            "name": "value",
-            "type": "TEXT"
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "identify",
-            "type": "EQUALS"
-          }
-        ]
+        "value": "track",
+        "displayValue": "track"
       },
       {
-        "type": "SIMPLE_TABLE",
-        "name": "external_ids",
-        "displayName": "External IDs",
-        "simpleTableColumns": [
-          {
-            "defaultValue": "",
-            "displayName": "Type",
-            "name": "type",
-            "type": "TEXT"
-          },
-          {
-            "defaultValue": "",
-            "displayName": "Value",
-            "name": "externalId",
-            "type": "TEXT"
-          },
-          {
-            "defaultValue": "",
-            "displayName": "Collection",
-            "name": "collection",
-            "type": "SELECT",
-            "selectItems": [
-              {
-                "value": "users",
-                "displayValue": "Users"
-              },
-              {
-                "value": "accounts",
-                "displayValue": "Accounts"
-              }
-            ]
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "identify",
-            "type": "EQUALS"
-          }
-        ]
+        "value": "page",
+        "displayValue": "page"
       },
       {
-        "type": "TEXT",
-        "name": "event_name",
-        "displayName": "Event name",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "track",
-            "type": "EQUALS"
-          }
-        ],
+        "value": "data_layer_event",
+        "displayValue": "data layer event"
+      }
+    ],
+    "simpleValueType": true,
+    "enablingConditions": []
+  },
+  {
+    "type": "TEXT",
+    "name": "user_id",
+    "displayName": "User ID",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "identify",
+        "type": "EQUALS"
+      }
+    ],
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "user_traits",
+    "displayName": "User traits",
+    "simpleTableColumns": [
+      {
         "defaultValue": "",
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ]
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
       },
       {
-        "type": "SIMPLE_TABLE",
-        "name": "track_properties",
-        "displayName": "Event properties",
-        "simpleTableColumns": [
-          {
-            "defaultValue": "",
-            "displayName": "Key",
-            "name": "key",
-            "type": "TEXT"
-          },
-          {
-            "defaultValue": "",
-            "displayName": "Value",
-            "name": "value",
-            "type": "TEXT"
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "track",
-            "type": "EQUALS"
-          }
-        ]
-      },
-      {
-        "type": "TEXT",
-        "name": "page_name",
-        "displayName": "Page name",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "page",
-            "type": "EQUALS"
-          }
-        ],
-        "valueValidators": []
-      },
-      {
-        "type": "SIMPLE_TABLE",
-        "name": "page_properties",
-        "displayName": "Page properties",
-        "simpleTableColumns": [
-          {
-            "defaultValue": "",
-            "displayName": "Key",
-            "name": "key",
-            "type": "TEXT"
-          },
-          {
-            "defaultValue": "",
-            "displayName": "Value",
-            "name": "value",
-            "type": "TEXT"
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "page",
-            "type": "EQUALS"
-          }
-        ]
-      },
-      {
-        "type": "TEXT",
-        "name": "group_id",
-        "displayName": "Group ID",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "group",
-            "type": "EQUALS"
-          }
-        ],
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ]
-      },
-      {
-        "type": "SIMPLE_TABLE",
-        "name": "group_traits",
-        "displayName": "Group traits",
-        "simpleTableColumns": [
-          {
-            "defaultValue": "",
-            "displayName": "Key",
-            "name": "key",
-            "type": "TEXT"
-          },
-          {
-            "defaultValue": "",
-            "displayName": "Value",
-            "name": "value",
-            "type": "TEXT"
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "group",
-            "type": "EQUALS"
-          }
-        ]
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
       }
     ],
     "enablingConditions": [
       {
-        "paramName": "use_manual_mapings",
-        "paramValue": true,
+        "paramName": "tag_type",
+        "paramValue": "identify",
         "type": "EQUALS"
       }
     ]
   },
   {
-    "type": "CHECKBOX",
-    "name": "use_data_layer",
-    "checkboxText": "Use data layer",
+    "type": "GROUP",
+    "name": "external_id",
+    "displayName": "External ID",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "TEXT",
+        "name": "external_id_value",
+        "displayName": "External ID value",
+        "simpleValueType": true
+      },
+      {
+        "type": "TEXT",
+        "name": "external_id_type",
+        "displayName": "External ID type",
+        "simpleValueType": true
+      },
+      {
+        "type": "SELECT",
+        "name": "external_id_collection",
+        "displayName": "External ID collection",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "users",
+            "displayValue": "users"
+          },
+          {
+            "value": "accounts",
+            "displayValue": "accounts"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "users"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "identify",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "event_name",
+    "displayName": "Event name",
     "simpleValueType": true,
-    "defaultValue": true
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      }
+    ],
+    "defaultValue": "",
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "track_properties",
+    "displayName": "Event properties",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "page_name",
+    "displayName": "Page name",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
+      }
+    ],
+    "valueValidators": []
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "page_properties",
+    "displayName": "Page properties",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "group_id",
+    "displayName": "Group ID",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "group",
+        "type": "EQUALS"
+      }
+    ],
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "group_traits",
+    "displayName": "Group traits",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "group",
+        "type": "EQUALS"
+      }
+    ]
   },
   {
     "type": "GROUP",
-    "name": "data_layer_mappings",
-    "displayName": "Data Layer mapping",
-    "groupStyle": "NO_ZIPPY",
+    "name": "ga4_enhannced_events",
+    "displayName": "GA4 enhanced-measurement events",
+    "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
-        "type": "GROUP",
-        "name": "ga4_enhannced_events",
-        "displayName": "GA4 enhanced-measurement events",
-        "groupStyle": "ZIPPY_OPEN",
-        "subParams": [
+        "type": "CHECKBOX",
+        "name": "ga4_enhannced_events_enabled",
+        "checkboxText": "Include GA4 enhanced-measurement events",
+        "simpleValueType": true,
+        "defaultValue": true
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "ga4_enhannced_events_mapping",
+        "displayName": "Enhanced events mapping",
+        "simpleTableColumns": [
           {
-            "type": "CHECKBOX",
-            "name": "ga4_enhannced_events_enabled",
-            "checkboxText": "Include GA4 enhanced-measurement events",
-            "simpleValueType": true,
-            "defaultValue": true
+            "defaultValue": "",
+            "displayName": "Data Layer event name",
+            "name": "event_name",
+            "type": "TEXT"
           },
           {
-            "type": "SIMPLE_TABLE",
-            "name": "ga4_enhannced_events_mapping",
-            "displayName": "Enhanced events mapping",
-            "simpleTableColumns": [
+            "defaultValue": "",
+            "displayName": "Journify event type",
+            "name": "event_type",
+            "type": "SELECT",
+            "selectItems": [
               {
-                "defaultValue": "",
-                "displayName": "Data Layer event name",
-                "name": "event_name",
-                "type": "TEXT"
+                "value": "identify",
+                "displayValue": "identify"
               },
               {
-                "defaultValue": "",
-                "displayName": "Journify event type",
-                "name": "event_type",
-                "type": "SELECT",
-                "selectItems": [
-                  {
-                    "value": "identify",
-                    "displayValue": "identify"
-                  },
-                  {
-                    "value": "group",
-                    "displayValue": "group"
-                  },
-                  {
-                    "value": "track",
-                    "displayValue": "track"
-                  },
-                  {
-                    "value": "page",
-                    "displayValue": "page"
-                  }
-                ]
-              }
-            ],
-            "enablingConditions": [
-              {
-                "paramName": "ga4_enhannced_events_enabled",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "defaultValue": [
-              {
-                "event_name": "page_view",
-                "event_type": "page"
+                "value": "group",
+                "displayValue": "group"
               },
               {
-                "event_name": "scroll",
-                "event_type": "track"
+                "value": "track",
+                "displayValue": "track"
               },
               {
-                "event_name": "click",
-                "event_type": "track"
-              },
-              {
-                "event_name": "view_search_results",
-                "event_type": "track"
-              },
-              {
-                "event_name": "video_start",
-                "event_type": "track"
-              },
-              {
-                "event_name": "video_progress",
-                "event_type": "track"
-              },
-              {
-                "event_name": "video_complete",
-                "event_type": "track"
-              },
-              {
-                "event_name": "file_download",
-                "event_type": "track"
-              },
-              {
-                "event_name": "form_start",
-                "event_type": "track"
-              },
-              {
-                "event_name": "form_submit",
-                "event_type": "track"
+                "value": "page",
+                "displayValue": "page"
               }
             ]
           }
-        ]
-      },
-      {
-        "type": "GROUP",
-        "name": "ga4_recommended_events",
-        "displayName": "GA4 recommended events",
-        "groupStyle": "ZIPPY_OPEN",
-        "subParams": [
+        ],
+        "enablingConditions": [
           {
-            "type": "CHECKBOX",
-            "name": "ga4_recommended_events_enabled",
-            "checkboxText": "Include GA4 recommended events",
-            "simpleValueType": true,
-            "defaultValue": true
+            "paramName": "ga4_enhannced_events_enabled",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "defaultValue": [
+          {
+            "event_name": "page_view",
+            "event_type": "page"
           },
           {
-            "type": "SIMPLE_TABLE",
-            "name": "ga4_recommended_events_mapping",
-            "displayName": "Recommended events mapping",
-            "simpleTableColumns": [
+            "event_name": "scroll",
+            "event_type": "track"
+          },
+          {
+            "event_name": "click",
+            "event_type": "track"
+          },
+          {
+            "event_name": "view_search_results",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_start",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_progress",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_complete",
+            "event_type": "track"
+          },
+          {
+            "event_name": "file_download",
+            "event_type": "track"
+          },
+          {
+            "event_name": "form_start",
+            "event_type": "track"
+          },
+          {
+            "event_name": "form_submit",
+            "event_type": "track"
+          }
+        ]
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "ga4_recommended_events",
+    "displayName": "GA4 recommended events",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "ga4_recommended_events_enabled",
+        "checkboxText": "Include GA4 recommended events",
+        "simpleValueType": true,
+        "defaultValue": true
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "ga4_recommended_events_mapping",
+        "displayName": "Recommended events mapping",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Data Layer event name",
+            "name": "event_name",
+            "type": "TEXT"
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Journify event type",
+            "name": "event_type",
+            "type": "SELECT",
+            "selectItems": [
               {
-                "defaultValue": "",
-                "displayName": "Data Layer event name",
-                "name": "event_name",
-                "type": "TEXT"
+                "value": "identify",
+                "displayValue": "identify"
               },
               {
-                "defaultValue": "",
-                "displayName": "Journify event type",
-                "name": "event_type",
-                "type": "SELECT",
-                "selectItems": [
-                  {
-                    "value": "identify",
-                    "displayValue": "identify"
-                  },
-                  {
-                    "value": "group",
-                    "displayValue": "group"
-                  },
-                  {
-                    "value": "track",
-                    "displayValue": "track"
-                  },
-                  {
-                    "value": "page",
-                    "displayValue": "page"
-                  }
-                ]
-              }
-            ],
-            "enablingConditions": [
-              {
-                "paramName": "ga4_recommended_events_enabled",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "defaultValue": [
-              {
-                "event_name": "add_payment_info",
-                "event_type": "track"
+                "value": "group",
+                "displayValue": "group"
               },
               {
-                "event_name": "add_shipping_info",
-                "event_type": "track"
+                "value": "track",
+                "displayValue": "track"
               },
               {
-                "event_name": "add_to_cart",
-                "event_type": "track"
-              },
-              {
-                "event_name": "add_to_wishlist",
-                "event_type": "track"
-              },
-              {
-                "event_name": "begin_checkout",
-                "event_type": "track"
-              },
-              {
-                "event_name": "earn_virtual_currency",
-                "event_type": "track"
-              },
-              {
-                "event_name": "exception",
-                "event_type": "track"
-              },
-              {
-                "event_name": "generate_lead",
-                "event_type": "track"
-              },
-              {
-                "event_name": "join_group",
-                "event_type": "track"
-              },
-              {
-                "event_name": "level_end",
-                "event_type": "track"
-              },
-              {
-                "event_name": "level_start",
-                "event_type": "track"
-              },
-              {
-                "event_name": "level_up",
-                "event_type": "track"
-              },
-              {
-                "event_name": "login",
-                "event_type": "track"
-              },
-              {
-                "event_name": "page_view",
-                "event_type": "page"
-              },
-              {
-                "event_name": "post_score",
-                "event_type": "track"
-              },
-              {
-                "event_name": "purchase",
-                "event_type": "track"
-              },
-              {
-                "event_name": "refund",
-                "event_type": "track"
-              },
-              {
-                "event_name": "remove_from_cart",
-                "event_type": "track"
-              },
-              {
-                "event_name": "search",
-                "event_type": "track"
-              },
-              {
-                "event_name": "select_content",
-                "event_type": "track"
-              },
-              {
-                "event_name": "select_item",
-                "event_type": "track"
-              },
-              {
-                "event_name": "select_promotion",
-                "event_type": "track"
-              },
-              {
-                "event_name": "share",
-                "event_type": "track"
-              },
-              {
-                "event_name": "sign_up",
-                "event_type": "track"
-              },
-              {
-                "event_name": "spend_virtual_currency",
-                "event_type": "track"
-              },
-              {
-                "event_name": "tutorial_begin",
-                "event_type": "track"
-              },
-              {
-                "event_name": "tutorial_complete",
-                "event_type": "track"
-              },
-              {
-                "event_name": "unlock_achievement",
-                "event_type": "track"
-              },
-              {
-                "event_name": "view_cart",
-                "event_type": "track"
-              },
-              {
-                "event_name": "view_item",
-                "event_type": "track"
-              },
-              {
-                "event_name": "view_item_list",
-                "event_type": "track"
-              },
-              {
-                "event_name": "view_promotion",
-                "event_type": "track"
-              },
-              {
-                "event_name": "view_search_results",
-                "event_type": "track"
+                "value": "page",
+                "displayValue": "page"
               }
             ]
           }
-        ]
-      },
-      {
-        "type": "GROUP",
-        "name": "ga4_automatic_events",
-        "displayName": "GA4 automatically collected events",
-        "groupStyle": "ZIPPY_OPEN",
-        "subParams": [
+        ],
+        "enablingConditions": [
           {
-            "type": "CHECKBOX",
-            "name": "ga4_automatic_events_enabled",
-            "checkboxText": "Include GA4 automatically collected events",
-            "simpleValueType": true,
-            "defaultValue": true
+            "paramName": "ga4_recommended_events_enabled",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "defaultValue": [
+          {
+            "event_name": "add_payment_info",
+            "event_type": "track"
           },
           {
-            "type": "SIMPLE_TABLE",
-            "name": "ga4_automatic_events_mapping",
-            "displayName": "Automatically collected events mapping",
-            "simpleTableColumns": [
+            "event_name": "add_shipping_info",
+            "event_type": "track"
+          },
+          {
+            "event_name": "add_to_cart",
+            "event_type": "track"
+          },
+          {
+            "event_name": "add_to_wishlist",
+            "event_type": "track"
+          },
+          {
+            "event_name": "begin_checkout",
+            "event_type": "track"
+          },
+          {
+            "event_name": "earn_virtual_currency",
+            "event_type": "track"
+          },
+          {
+            "event_name": "exception",
+            "event_type": "track"
+          },
+          {
+            "event_name": "generate_lead",
+            "event_type": "track"
+          },
+          {
+            "event_name": "join_group",
+            "event_type": "track"
+          },
+          {
+            "event_name": "level_end",
+            "event_type": "track"
+          },
+          {
+            "event_name": "level_start",
+            "event_type": "track"
+          },
+          {
+            "event_name": "level_up",
+            "event_type": "track"
+          },
+          {
+            "event_name": "login",
+            "event_type": "track"
+          },
+          {
+            "event_name": "page_view",
+            "event_type": "page"
+          },
+          {
+            "event_name": "post_score",
+            "event_type": "track"
+          },
+          {
+            "event_name": "purchase",
+            "event_type": "track"
+          },
+          {
+            "event_name": "refund",
+            "event_type": "track"
+          },
+          {
+            "event_name": "remove_from_cart",
+            "event_type": "track"
+          },
+          {
+            "event_name": "search",
+            "event_type": "track"
+          },
+          {
+            "event_name": "select_content",
+            "event_type": "track"
+          },
+          {
+            "event_name": "select_item",
+            "event_type": "track"
+          },
+          {
+            "event_name": "select_promotion",
+            "event_type": "track"
+          },
+          {
+            "event_name": "share",
+            "event_type": "track"
+          },
+          {
+            "event_name": "sign_up",
+            "event_type": "track"
+          },
+          {
+            "event_name": "spend_virtual_currency",
+            "event_type": "track"
+          },
+          {
+            "event_name": "tutorial_begin",
+            "event_type": "track"
+          },
+          {
+            "event_name": "tutorial_complete",
+            "event_type": "track"
+          },
+          {
+            "event_name": "unlock_achievement",
+            "event_type": "track"
+          },
+          {
+            "event_name": "view_cart",
+            "event_type": "track"
+          },
+          {
+            "event_name": "view_item",
+            "event_type": "track"
+          },
+          {
+            "event_name": "view_item_list",
+            "event_type": "track"
+          },
+          {
+            "event_name": "view_promotion",
+            "event_type": "track"
+          },
+          {
+            "event_name": "view_search_results",
+            "event_type": "track"
+          }
+        ]
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "ga4_automatic_events",
+    "displayName": "GA4 automatically collected events",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "ga4_automatic_events_enabled",
+        "checkboxText": "Include GA4 automatically collected events",
+        "simpleValueType": true,
+        "defaultValue": true
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "ga4_automatic_events_mapping",
+        "displayName": "Automatically collected events mapping",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Data Layer event name",
+            "name": "event_name",
+            "type": "TEXT"
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Journify event type",
+            "name": "event_type",
+            "type": "SELECT",
+            "selectItems": [
               {
-                "defaultValue": "",
-                "displayName": "Data Layer event name",
-                "name": "event_name",
-                "type": "TEXT"
+                "value": "identify",
+                "displayValue": "identify"
               },
               {
-                "defaultValue": "",
-                "displayName": "Journify event type",
-                "name": "event_type",
-                "type": "SELECT",
-                "selectItems": [
-                  {
-                    "value": "identify",
-                    "displayValue": "identify"
-                  },
-                  {
-                    "value": "group",
-                    "displayValue": "group"
-                  },
-                  {
-                    "value": "track",
-                    "displayValue": "track"
-                  },
-                  {
-                    "value": "page",
-                    "displayValue": "page"
-                  }
-                ]
-              }
-            ],
-            "enablingConditions": [
-              {
-                "paramName": "ga4_automatic_events_enabled",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "defaultValue": [
-              {
-                "event_name": "page_view",
-                "event_type": "page"
+                "value": "group",
+                "displayValue": "group"
               },
               {
-                "event_name": "screen_view",
-                "event_type": "page"
+                "value": "track",
+                "displayValue": "track"
               },
               {
-                "event_name": "ad_click",
-                "event_type": "track"
-              },
-              {
-                "event_name": "ad_exposure",
-                "event_type": "track"
-              },
-              {
-                "event_name": "ad_impression",
-                "event_type": "track"
-              },
-              {
-                "event_name": "ad_query",
-                "event_type": "track"
-              },
-              {
-                "event_name": "ad_reward",
-                "event_type": "track"
-              },
-              {
-                "event_name": "adunit_exposure",
-                "event_type": "track"
-              },
-              {
-                "event_name": "app_clear_data",
-                "event_type": "track"
-              },
-              {
-                "event_name": "app_exception",
-                "event_type": "track"
-              },
-              {
-                "event_name": "app_remove",
-                "event_type": "track"
-              },
-              {
-                "event_name": "app_store_refund",
-                "event_type": "track"
-              },
-              {
-                "event_name": "app_store_subscription_cancel",
-                "event_type": "track"
-              },
-              {
-                "event_name": "app_store_subscription_convert",
-                "event_type": "track"
-              },
-              {
-                "event_name": "app_store_subscription_renew",
-                "event_type": "track"
-              },
-              {
-                "event_name": "app_update",
-                "event_type": "track"
-              },
-              {
-                "event_name": "click",
-                "event_type": "track"
-              },
-              {
-                "event_name": "dynamic_link_app_open",
-                "event_type": "track"
-              },
-              {
-                "event_name": "dynamic_link_app_update",
-                "event_type": "track"
-              },
-              {
-                "event_name": "dynamic_link_first_open",
-                "event_type": "track"
-              },
-              {
-                "event_name": "error",
-                "event_type": "track"
-              },
-              {
-                "event_name": "file_download",
-                "event_type": "track"
-              },
-              {
-                "event_name": "firebase_campaign",
-                "event_type": "track"
-              },
-              {
-                "event_name": "firebase_in_app_message_action",
-                "event_type": "track"
-              },
-              {
-                "event_name": "firebase_in_app_message_dismiss",
-                "event_type": "track"
-              },
-              {
-                "event_name": "firebase_in_app_message_impression",
-                "event_type": "track"
-              },
-              {
-                "event_name": "first_open",
-                "event_type": "track"
-              },
-              {
-                "event_name": "first_visit",
-                "event_type": "track"
-              },
-              {
-                "event_name": "form_start",
-                "event_type": "track"
-              },
-              {
-                "event_name": "form_submit",
-                "event_type": "track"
-              },
-              {
-                "event_name": "in_app_purchase",
-                "event_type": "track"
-              },
-              {
-                "event_name": "notification_dismiss",
-                "event_type": "track"
-              },
-              {
-                "event_name": "notification_foreground",
-                "event_type": "track"
-              },
-              {
-                "event_name": "notification_open",
-                "event_type": "track"
-              },
-              {
-                "event_name": "notification_receive",
-                "event_type": "track"
-              },
-              {
-                "event_name": "os_update",
-                "event_type": "track"
-              },
-              {
-                "event_name": "scroll",
-                "event_type": "track"
-              },
-              {
-                "event_name": "session_start",
-                "event_type": "track"
-              },
-              {
-                "event_name": "user_engagement",
-                "event_type": "track"
-              },
-              {
-                "event_name": "video_complete",
-                "event_type": "track"
-              },
-              {
-                "event_name": "video_progress",
-                "event_type": "track"
-              },
-              {
-                "event_name": "video_start",
-                "event_type": "track"
-              },
-              {
-                "event_name": "view_search_results",
-                "event_type": "track"
+                "value": "page",
+                "displayValue": "page"
               }
             ]
           }
-        ]
-      },
-      {
-        "type": "GROUP",
-        "name": "additional_mappings",
-        "displayName": "Additional mappings",
-        "groupStyle": "ZIPPY_OPEN",
-        "subParams": [
+        ],
+        "enablingConditions": [
           {
-            "type": "SIMPLE_TABLE",
-            "name": "data_layer_additional_mappings",
-            "displayName": "Data layer additional mappings",
-            "simpleTableColumns": [
+            "paramName": "ga4_automatic_events_enabled",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "defaultValue": [
+          {
+            "event_name": "page_view",
+            "event_type": "page"
+          },
+          {
+            "event_name": "screen_view",
+            "event_type": "page"
+          },
+          {
+            "event_name": "ad_click",
+            "event_type": "track"
+          },
+          {
+            "event_name": "ad_exposure",
+            "event_type": "track"
+          },
+          {
+            "event_name": "ad_impression",
+            "event_type": "track"
+          },
+          {
+            "event_name": "ad_query",
+            "event_type": "track"
+          },
+          {
+            "event_name": "ad_reward",
+            "event_type": "track"
+          },
+          {
+            "event_name": "adunit_exposure",
+            "event_type": "track"
+          },
+          {
+            "event_name": "app_clear_data",
+            "event_type": "track"
+          },
+          {
+            "event_name": "app_exception",
+            "event_type": "track"
+          },
+          {
+            "event_name": "app_remove",
+            "event_type": "track"
+          },
+          {
+            "event_name": "app_store_refund",
+            "event_type": "track"
+          },
+          {
+            "event_name": "app_store_subscription_cancel",
+            "event_type": "track"
+          },
+          {
+            "event_name": "app_store_subscription_convert",
+            "event_type": "track"
+          },
+          {
+            "event_name": "app_store_subscription_renew",
+            "event_type": "track"
+          },
+          {
+            "event_name": "app_update",
+            "event_type": "track"
+          },
+          {
+            "event_name": "click",
+            "event_type": "track"
+          },
+          {
+            "event_name": "dynamic_link_app_open",
+            "event_type": "track"
+          },
+          {
+            "event_name": "dynamic_link_app_update",
+            "event_type": "track"
+          },
+          {
+            "event_name": "dynamic_link_first_open",
+            "event_type": "track"
+          },
+          {
+            "event_name": "error",
+            "event_type": "track"
+          },
+          {
+            "event_name": "file_download",
+            "event_type": "track"
+          },
+          {
+            "event_name": "firebase_campaign",
+            "event_type": "track"
+          },
+          {
+            "event_name": "firebase_in_app_message_action",
+            "event_type": "track"
+          },
+          {
+            "event_name": "firebase_in_app_message_dismiss",
+            "event_type": "track"
+          },
+          {
+            "event_name": "firebase_in_app_message_impression",
+            "event_type": "track"
+          },
+          {
+            "event_name": "first_open",
+            "event_type": "track"
+          },
+          {
+            "event_name": "first_visit",
+            "event_type": "track"
+          },
+          {
+            "event_name": "form_start",
+            "event_type": "track"
+          },
+          {
+            "event_name": "form_submit",
+            "event_type": "track"
+          },
+          {
+            "event_name": "in_app_purchase",
+            "event_type": "track"
+          },
+          {
+            "event_name": "notification_dismiss",
+            "event_type": "track"
+          },
+          {
+            "event_name": "notification_foreground",
+            "event_type": "track"
+          },
+          {
+            "event_name": "notification_open",
+            "event_type": "track"
+          },
+          {
+            "event_name": "notification_receive",
+            "event_type": "track"
+          },
+          {
+            "event_name": "os_update",
+            "event_type": "track"
+          },
+          {
+            "event_name": "scroll",
+            "event_type": "track"
+          },
+          {
+            "event_name": "session_start",
+            "event_type": "track"
+          },
+          {
+            "event_name": "user_engagement",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_complete",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_progress",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_start",
+            "event_type": "track"
+          },
+          {
+            "event_name": "view_search_results",
+            "event_type": "track"
+          }
+        ]
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "additional_mappings",
+    "displayName": "Additional mappings",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "data_layer_additional_mappings",
+        "displayName": "Data layer additional mappings",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Data Layer event name",
+            "name": "event_name",
+            "type": "TEXT"
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Journify event type",
+            "name": "event_type",
+            "type": "SELECT",
+            "selectItems": [
               {
-                "defaultValue": "",
-                "displayName": "Data Layer event name",
-                "name": "event_name",
-                "type": "TEXT"
+                "value": "identify",
+                "displayValue": "identify"
               },
               {
-                "defaultValue": "",
-                "displayName": "Journify event type",
-                "name": "event_type",
-                "type": "SELECT",
-                "selectItems": [
-                  {
-                    "value": "identify",
-                    "displayValue": "identify"
-                  },
-                  {
-                    "value": "group",
-                    "displayValue": "group"
-                  },
-                  {
-                    "value": "track",
-                    "displayValue": "track"
-                  },
-                  {
-                    "value": "page",
-                    "displayValue": "page"
-                  }
-                ]
+                "value": "group",
+                "displayValue": "group"
+              },
+              {
+                "value": "track",
+                "displayValue": "track"
+              },
+              {
+                "value": "page",
+                "displayValue": "page"
               }
             ]
           }
@@ -895,8 +899,8 @@ ___TEMPLATE_PARAMETERS___
     ],
     "enablingConditions": [
       {
-        "paramName": "use_data_layer",
-        "paramValue": true,
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
         "type": "EQUALS"
       }
     ]
@@ -936,12 +940,13 @@ const getType = require('getType');
 const readTitle = require('readTitle');
 
 // constants
-const VERSION = 'v0.0.87';
-const JS_URL = 'https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@'+VERSION+'/dist/_bundles/journifyio.min.js';
+const DEFAULT_SDK_VERSION = 'latest';
+const SDK_VERSION = data.sdk_version || DEFAULT_SDK_VERSION;
+const JS_URL = 'https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@'+SDK_VERSION+'/dist/_bundles/journifyio.min.js';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 
-const standardDataLayerEventKeys = [
+const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'accept_time',
     'achievement_id',
     'aclid',
@@ -1079,41 +1084,81 @@ const onsuccess = () => {
 
     load(journify);
 
-    if (data.use_manual_mapings === true) {
-        sendManualMappedEvent(journify);
-    }
+    switch(data.tag_type) {
+        case 'identify':
+            identify(journify);
+            break;
 
-    if (data.use_data_layer === true) {
-        sendDataLayerEvent(journify);
+        case 'group':
+            group(journify);
+            break;
+
+        case 'track':
+            track(journify);
+            break;
+
+        case 'page':
+            page(journify);
+            break;
+
+        case 'data_layer_event':
+            dataLayerEvent(journify);
+            break;
+
+        default:
+            log(LOG_PREFIX + 'Unsupported tag type `'+ data.tag_type +'`, skipping');
+            break;
     }
 
     data.gtmOnSuccess();
 };
 
-const sendManualMappedEvent = (journify) => {
-    const tagType = data.tag_type;
-    switch(tagType) {
-        case 'identify':
-            identify(journify);
-            break;
-        case 'group':
-            group(journify);
-            break;
-        case 'track':
-            track(journify);
-            break;
-        case 'page':
-            page(journify);
-            break;
-        default:
-            log(LOG_PREFIX + 'Unsupported tag type `'+ tagType +'`, skipping');
-            break;
+const load = (journify) => {
+    if (!dataHasField('write_key')) {
+        return fail('`write_key` setting is required when calling `load`');
     }
+
+    const settings = {
+        writeKey: data.write_key,
+        apiHost: "http://localhost:8082"
+    };
+
+    if (dataHasField('cookie_domain')) {
+        settings.cookie = {
+            domain: data.cookie_domain,
+        };
+    }
+
+    if (dataHasField('session_duration_min')){
+        const sessionDurationMin = makeNumber(data.session_duration_min);
+        if (typeof sessionDurationMin !== 'undefined') {
+            settings.sessionDurationMin = sessionDurationMin;
+        }
+    }
+
+    journify.load(settings);
+    log(LOG_PREFIX + 'Success: loading Journify SDK');
+};
+
+const dataHasField = (fieldKey) => {
+    const val = data[fieldKey];
+    return val && val.length > 0;
 };
 
 const identify = (journify) => {
     const traits = makeTableMap(data.user_traits, 'key', 'value');
-    journify.identify(data.user_id, traits, data.external_ids)
+    let externalID = null;
+    if (dataHasField('external_id_value') &&
+        dataHasField('external_id_type') &&
+        dataHasField('external_id_collection')) {
+        externalID = {
+            id: data.external_id_value,
+            type: data.external_id_type,
+            collection: data.external_id_collection,
+        };
+    }
+
+    journify.identify(data.user_id, traits, externalID)
         .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
         .catch((e) => fail(e));
 };
@@ -1145,7 +1190,7 @@ const page = (journify) => {
 
 };
 
-const sendDataLayerEvent = (journify) => {
+const dataLayerEvent = (journify) => {
     const eventsMap = getDataLayerMappedEvents();
     let eventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
     if (!eventName) {
@@ -1155,7 +1200,6 @@ const sendDataLayerEvent = (journify) => {
 
     const eventType = eventsMap[eventName];
 
-    log(LOG_PREFIX + 'Event name`'+ eventName +'` is received from the data layer and mapped to event type `'+ eventType +'`');
     if (!eventType) {
         log(LOG_PREFIX + 'Event name`'+ eventName +'` is not mapped, skipping event');
         return;
@@ -1248,7 +1292,7 @@ const dataLayerPage = (journify) => {
 };
 
 const getAllDataLayerProperties = () => {
-    const properties = copyKeysFromDataLayer(standardDataLayerEventKeys);
+    const properties = copyKeysFromDataLayer(STANDARD_DATA_LAYER_EVENT_KEYS);
 
     const ecommerce = copyFromDataLayer('ecommerce');
     if (getType(ecommerce) == 'object') {
@@ -1297,32 +1341,6 @@ const copyObj = (target, source) => {
     }
 };
 
-const load = (journify) => {
-    if (!dataHasField('write_key')) {
-        return fail('`write_key` setting is required when calling `load`');
-    }
-
-    const settings = {
-        writeKey: data.write_key,
-    };
-
-    if (dataHasField('cookie_domain')) {
-        settings.cookie = {
-            domain: data.cookie_domain,
-        };
-    }
-
-    if (dataHasField('session_duration_min')){
-        const sessionDurationMin = makeNumber(data.session_duration_min);
-        if (typeof sessionDurationMin !== 'undefined') {
-            settings.sessionDurationMin = sessionDurationMin;
-        }
-    }
-
-    journify.load(settings);
-    log(LOG_PREFIX + 'Success: loading Journify SDK');
-};
-
 const copyKeysFromDataLayer = (keys) => {
     const copy = {};
     keys.forEach((key) => {
@@ -1333,11 +1351,6 @@ const copyKeysFromDataLayer = (keys) => {
     });
 
     return copy;
-};
-
-const dataHasField = (fieldKey) => {
-    const val = data[fieldKey];
-    return val && val.length > 0;
 };
 
 const onfailure = () => {
