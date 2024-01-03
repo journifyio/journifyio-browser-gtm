@@ -55,7 +55,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "NON_EMPTY"
       }
     ],
-    "defaultValue": "latest"
+    "defaultValue": "0.0.91"
   },
   {
     "type": "SELECT",
@@ -943,7 +943,7 @@ const getType = require('getType');
 const readTitle = require('readTitle');
 
 // constants
-const DEFAULT_SDK_VERSION = 'latest';
+const DEFAULT_SDK_VERSION = '0.0.91';
 const SDK_VERSION = data.sdk_version || DEFAULT_SDK_VERSION;
 const JS_URL = 'https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@'+SDK_VERSION+'/dist/_bundles/journifyio.min.js';
 const LOG_PREFIX = '[Journify / GTM] ';
@@ -1126,9 +1126,7 @@ const load = (journify) => {
     };
 
     if (dataHasField('api_host')) {
-        settings.cookie = {
-            apiHost: data.api_host,
-        };
+        settings.apiHost = data.api_host;
     }
 
     if (dataHasField('cookie_domain')) {
