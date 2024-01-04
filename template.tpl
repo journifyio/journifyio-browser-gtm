@@ -5,6 +5,7 @@ Template Gallery Developer Terms of Service available at
 https://developers.google.com/tag-manager/gallery-tos (or such other URL as
 Google may provide), as modified from time to time.
 
+
 ___INFO___
 
 {
@@ -33,6 +34,53 @@ ___TEMPLATE_PARAMETERS___
 
 [
   {
+    "type": "SELECT",
+    "name": "tag_type",
+    "displayName": "Tag type",
+    "macrosInSelect": false,
+    "selectItems": [
+      {
+        "value": "init",
+        "displayValue": "init"
+      },
+      {
+        "value": "track",
+        "displayValue": "track"
+      },
+      {
+        "value": "page",
+        "displayValue": "page"
+      },
+      {
+        "value": "data_layer_event",
+        "displayValue": "data layer event"
+      },
+      {
+        "value": "identify",
+        "displayValue": "identify"
+      },
+      {
+        "value": "group",
+        "displayValue": "group"
+      }
+    ],
+    "simpleValueType": true,
+    "defaultValue": "init"
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "track_page_view_on_init",
+    "checkboxText": "Track page view after init",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
     "type": "TEXT",
     "name": "write_key",
     "displayName": "Write Key",
@@ -41,6 +89,13 @@ ___TEMPLATE_PARAMETERS___
     "valueValidators": [
       {
         "type": "NON_EMPTY"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
       }
     ]
   },
@@ -55,36 +110,14 @@ ___TEMPLATE_PARAMETERS___
         "type": "NON_EMPTY"
       }
     ],
-    "defaultValue": "0.0.91"
-  },
-  {
-    "type": "SELECT",
-    "name": "tag_type",
-    "displayName": "Tag type",
-    "macrosInSelect": false,
-    "selectItems": [
+    "defaultValue": "0.0.92",
+    "enablingConditions": [
       {
-        "value": "identify",
-        "displayValue": "identify"
-      },
-      {
-        "value": "group",
-        "displayValue": "group"
-      },
-      {
-        "value": "track",
-        "displayValue": "track"
-      },
-      {
-        "value": "page",
-        "displayValue": "page"
-      },
-      {
-        "value": "data_layer_event",
-        "displayValue": "data layer event"
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
       }
-    ],
-    "simpleValueType": true
+    ]
   },
   {
     "type": "TEXT",
@@ -903,28 +936,41 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "GROUP",
-    "name": "other_settings",
-    "displayName": "Other settings",
-    "groupStyle": "ZIPPY_CLOSED",
-    "subParams": [
+    "type": "TEXT",
+    "name": "api_host",
+    "displayName": "API host (optional)",
+    "simpleValueType": true,
+    "enablingConditions": [
       {
-        "type": "TEXT",
-        "name": "api_host",
-        "displayName": "API host (optional)",
-        "simpleValueType": true
-      },
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "cookie_domain",
+    "displayName": "Cookie domain (optional)",
+    "simpleValueType": true,
+    "enablingConditions": [
       {
-        "type": "TEXT",
-        "name": "cookie_domain",
-        "displayName": "Cookie domain (optional)",
-        "simpleValueType": true
-      },
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "session_duration_min",
+    "displayName": "Session duration in minutes (optional)",
+    "simpleValueType": true,
+    "enablingConditions": [
       {
-        "type": "TEXT",
-        "name": "session_duration_min",
-        "displayName": "Session duration in minutes (optional)",
-        "simpleValueType": true
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
       }
     ]
   }
@@ -1080,15 +1126,16 @@ const fail = msg => {
 };
 
 const onsuccess = () => {
-
     const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
     if (!journify) {
         return fail('Failed to load the window.journify');
     }
 
-    load(journify);
-
     switch(data.tag_type) {
+        case 'init':
+            init(journify);
+            break;
+
         case 'identify':
             identify(journify);
             break;
@@ -1110,14 +1157,15 @@ const onsuccess = () => {
             break;
 
         default:
-            log(LOG_PREFIX + 'Unsupported tag type `'+ data.tag_type +'`, skipping');
+            log(LOG_PREFIX + ' Unsupported tag type `'+ data.tag_type +'`, skipping');
             break;
     }
+
 
     data.gtmOnSuccess();
 };
 
-const load = (journify) => {
+const init = (journify) => {
     if (!dataHasField('write_key')) {
         return fail('`write_key` setting is required when calling `load`');
     }
@@ -1144,7 +1192,12 @@ const load = (journify) => {
     }
 
     journify.load(settings);
-    log(LOG_PREFIX + 'Success: loading Journify SDK');
+
+    if (data.track_page_view_on_init === true) {
+        page(journify);
+    }
+
+    log(LOG_PREFIX + 'Success: initializing Journify SDK');
 };
 
 const dataHasField = (fieldKey) => {
@@ -1153,7 +1206,7 @@ const dataHasField = (fieldKey) => {
 };
 
 const identify = (journify) => {
-    const traits = makeTableMap(data.user_traits, 'key', 'value');
+    const traits = makeTableMap(data.user_traits || [], 'key', 'value');
     let externalID = null;
     if (dataHasField('external_id_value') &&
         dataHasField('external_id_type') &&
@@ -1165,23 +1218,17 @@ const identify = (journify) => {
         };
     }
 
-    journify.identify(data.user_id, traits, externalID)
-        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
-        .catch((e) => fail(e));
+    journify.identify(data.user_id, traits, externalID);
 };
 
 const group = (journify) => {
-    const traits = makeTableMap(data.group_traits, 'key', 'value');
-    journify.group(data.group_id, traits)
-        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Group call, context', ctx))
-        .catch((e) => fail(e));
+    const traits = makeTableMap(data.group_traits || [], 'key', 'value');
+    journify.group(data.group_id, traits);
 };
 
 const track = (journify) => {
-    const properties = makeTableMap(data.track_properties, 'key', 'value');
-    journify.track(data.event_name, properties)
-        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Track call, context', ctx))
-        .catch((e) => fail(e));
+    const properties = makeTableMap(data.track_properties || [], 'key', 'value');
+    journify.track(data.event_name, properties);
 };
 
 const page = (journify) => {
@@ -1190,23 +1237,21 @@ const page = (journify) => {
         pageName = readTitle();
     }
 
-    const properties = makeTableMap(data.page_properties, 'key', 'value');
-    journify.page(pageName, properties)
-        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Page call, context', ctx))
-        .catch((e) => fail(e));
+    const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+    journify.page(pageName, properties);
 
 };
 
 const dataLayerEvent = (journify) => {
     const eventsMap = getDataLayerMappedEvents();
-    if (!eventName) {
-        log(LOG_PREFIX + 'Event name is not defined, skipping event');
+    if (!dataLayerEventName) {
+        log(LOG_PREFIX + ' Event name is not defined, skipping event');
         return;
     }
 
-    const eventType = eventsMap[eventName];
+    const eventType = eventsMap[dataLayerEventName];
     if (!eventType) {
-        log(LOG_PREFIX + 'Event name`'+ eventName +'` is not mapped, skipping event');
+        log(LOG_PREFIX + 'Event name`'+ dataLayerEventName +'` is not mapped, skipping event');
         return;
     }
 
@@ -1218,57 +1263,44 @@ const dataLayerEvent = (journify) => {
             dataLayerGroup(journify);
             break;
         case 'track':
-            dataLayerTrack(journify, eventName);
+            dataLayerTrack(journify, dataLayerEventName);
             break;
         case 'page':
             dataLayerPage(journify);
             break;
         default:
-            log(LOG_PREFIX + 'Event name`'+ eventName +'` is mapped to unsupported event type `'+ eventType +'`, skipping event');
+            log(LOG_PREFIX + 'Event name`'+ dataLayerEventName +'` is mapped to unsupported event type `'+ eventType +'`, skipping event');
             break;
     }
 
 };
 
 const dataLayerIdentify = (journify) => {
-
-    if (!userId) {
+    if (!dataLayerUserID) {
         return fail('`user_id` is required when calling `identify`');
     }
 
-
-
-
-
-    journify.identify(userId, traits,  externalId)
-        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Identify call, context', ctx))
-        .catch((e) => fail(e));
+    journify.identify(dataLayerUserID, dataLayerTraits,  dataLayerExternalId);
 };
 
 const dataLayerGroup = (journify) => {
-    if (!groupId) {
+    if (!dataLayerGroupId) {
         return fail('`group_id` is required when calling `group`');
     }
 
-    journify.group(groupId, traits)
-        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Group call, context', ctx))
-        .catch((e) => fail(e));
+    journify.group(dataLayerGroupId, dataLayerTraits);
 };
 
 const dataLayerTrack = (journify, eventName) => {
-    journify.track(eventName, dataLayerEventProperties)
-        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Track call, context', ctx))
-        .catch((e) => fail(e));
+    journify.track(eventName, dataLayerEventProperties);
 };
 
 const dataLayerPage = (journify) => {
-    if (!pageName) {
-        pageName = readTitle();
+    if (!dataLayerPageName) {
+        dataLayerPageName = readTitle();
     }
 
-    journify.page(pageName, dataLayerEventProperties)
-        .then((ctx) => log(LOG_PREFIX + 'Success: Journify Page call, context', ctx))
-        .catch((e) => fail(e));
+    journify.page(dataLayerPageName, dataLayerEventProperties);
 };
 
 const getDataLayerMappedEvents = () => {
@@ -1292,7 +1324,7 @@ const getDataLayerMappedEvents = () => {
 
     const eventsMap = {};
     for (let i = 0; i < mappings.length; i++) {
-        const currentMap = makeTableMap(mappings[i], 'event_name', 'event_type');
+        const currentMap = makeTableMap(mappings[i] || [], 'event_name', 'event_type');
         copyObj(eventsMap, currentMap);
     }
 
@@ -1321,21 +1353,21 @@ const onfailure = () => {
     return fail('Failed to load the Journify JavaScript library');
 };
 
-// copy data layer variables
-let eventName = null;
-let userId = null;
-let externalId = null;
-let traits = null;
-let pageName = null;
-let groupId = null;
+// Main
+// init data layer variables
+let dataLayerEventName = null;
 let dataLayerEventProperties = null;
-
+let dataLayerUserID = null;
+let dataLayerExternalId = null;
+let dataLayerTraits = null;
+let dataLayerPageName = null;
+let dataLayerGroupId = null;
 
 if (data.tag_type == 'data_layer_event') {
-    eventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
-    userId = copyFromDataLayer('user_id');
-    externalId = copyFromDataLayer('external_id');
-    traits = copyFromDataLayer('traits') || {};
+    dataLayerEventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
+    dataLayerUserID = copyFromDataLayer('user_id');
+    dataLayerExternalId = copyFromDataLayer('external_id');
+    dataLayerTraits = copyFromDataLayer('traits') || {};
     const traitsKeys = {
         'user_data.email_address': 'email',
         'user_data.phone_number': 'phone',
@@ -1348,17 +1380,17 @@ if (data.tag_type == 'data_layer_event') {
         'user_data.country': 'country_code',
     };
 
-    pageName = copyFromDataLayer('name');
+    dataLayerPageName = copyFromDataLayer('name');
 
     for (let key in traitsKeys) {
         const journifyKey = traitsKeys[key];
         const value = copyFromDataLayer(key);
         if (value) {
-            traits[journifyKey] = value;
+            dataLayerTraits[journifyKey] = value;
         }
     }
 
-    groupId = copyFromDataLayer('group_id');
+    dataLayerGroupId = copyFromDataLayer('group_id');
 
     dataLayerEventProperties = copyKeysFromDataLayer(STANDARD_DATA_LAYER_EVENT_KEYS);
 
@@ -1373,6 +1405,9 @@ if (data.tag_type == 'data_layer_event') {
     }
 }
 
+log(LOG_PREFIX + ' Tag is fired with Event name from data layer `'+ dataLayerEventName +'` and tag_type `'+ data.tag_type +'`');
+
+// inject the Journify JavaScript SDK
 injectScript(JS_URL, onsuccess, onfailure, 'journify');
 
 
