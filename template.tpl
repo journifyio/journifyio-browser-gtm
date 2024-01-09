@@ -936,6 +936,41 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
+    "type": "GROUP",
+    "name": "additional_properties",
+    "displayName": "Additional properties",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "additional_data_layer_properties",
+        "displayName": "Additional properties",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Property Key",
+            "name": "property_key",
+            "type": "TEXT"
+          }
+        ],
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "data_layer_event",
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
     "type": "TEXT",
     "name": "api_host",
     "displayName": "API host (optional)",
@@ -1393,6 +1428,16 @@ if (data.tag_type == 'data_layer_event') {
     dataLayerGroupId = copyFromDataLayer('group_id');
 
     dataLayerEventProperties = copyKeysFromDataLayer(STANDARD_DATA_LAYER_EVENT_KEYS);
+
+    if (dataHasField('additional_data_layer_properties')) {
+        for (let i = 0; i < data.additional_data_layer_properties.length; i++) {
+            const key = data.additional_data_layer_properties[i].property_key;
+            const value = copyFromDataLayer(key);
+            if (value) {
+                dataLayerEventProperties[key] = value;
+            }
+        }
+    }
 
     const ecommerce = copyFromDataLayer('ecommerce');
     if (getType(ecommerce) == 'object') {
