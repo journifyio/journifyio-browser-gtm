@@ -337,114 +337,6 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "GROUP",
-    "name": "ga4_enhannced_events",
-    "displayName": "GA4 enhanced-measurement events",
-    "groupStyle": "ZIPPY_OPEN",
-    "subParams": [
-      {
-        "type": "CHECKBOX",
-        "name": "ga4_enhannced_events_enabled",
-        "checkboxText": "Include GA4 enhanced-measurement events",
-        "simpleValueType": true,
-        "defaultValue": true
-      },
-      {
-        "type": "SIMPLE_TABLE",
-        "name": "ga4_enhannced_events_mapping",
-        "displayName": "Enhanced events mapping",
-        "simpleTableColumns": [
-          {
-            "defaultValue": "",
-            "displayName": "Data Layer event name",
-            "name": "event_name",
-            "type": "TEXT"
-          },
-          {
-            "defaultValue": "",
-            "displayName": "Journify event type",
-            "name": "event_type",
-            "type": "SELECT",
-            "selectItems": [
-              {
-                "value": "identify",
-                "displayValue": "identify"
-              },
-              {
-                "value": "group",
-                "displayValue": "group"
-              },
-              {
-                "value": "track",
-                "displayValue": "track"
-              },
-              {
-                "value": "page",
-                "displayValue": "page"
-              }
-            ]
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "ga4_enhannced_events_enabled",
-            "paramValue": true,
-            "type": "EQUALS"
-          }
-        ],
-        "defaultValue": [
-          {
-            "event_name": "page_view",
-            "event_type": "page"
-          },
-          {
-            "event_name": "scroll",
-            "event_type": "track"
-          },
-          {
-            "event_name": "click",
-            "event_type": "track"
-          },
-          {
-            "event_name": "view_search_results",
-            "event_type": "track"
-          },
-          {
-            "event_name": "video_start",
-            "event_type": "track"
-          },
-          {
-            "event_name": "video_progress",
-            "event_type": "track"
-          },
-          {
-            "event_name": "video_complete",
-            "event_type": "track"
-          },
-          {
-            "event_name": "file_download",
-            "event_type": "track"
-          },
-          {
-            "event_name": "form_start",
-            "event_type": "track"
-          },
-          {
-            "event_name": "form_submit",
-            "event_type": "track"
-          }
-        ]
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "data_layer_event",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "GROUP",
     "name": "ga4_recommended_events",
     "displayName": "GA4 recommended events",
     "groupStyle": "ZIPPY_OPEN",
@@ -645,6 +537,114 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "GROUP",
+    "name": "ga4_enhannced_events",
+    "displayName": "GA4 enhanced-measurement events",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "ga4_enhannced_events_enabled",
+        "checkboxText": "Include GA4 enhanced-measurement events",
+        "simpleValueType": true,
+        "defaultValue": false
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "ga4_enhannced_events_mapping",
+        "displayName": "Enhanced events mapping",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Data Layer event name",
+            "name": "event_name",
+            "type": "TEXT"
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Journify event type",
+            "name": "event_type",
+            "type": "SELECT",
+            "selectItems": [
+              {
+                "value": "identify",
+                "displayValue": "identify"
+              },
+              {
+                "value": "group",
+                "displayValue": "group"
+              },
+              {
+                "value": "track",
+                "displayValue": "track"
+              },
+              {
+                "value": "page",
+                "displayValue": "page"
+              }
+            ]
+          }
+        ],
+        "enablingConditions": [
+          {
+            "paramName": "ga4_enhannced_events_enabled",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "defaultValue": [
+          {
+            "event_name": "page_view",
+            "event_type": "page"
+          },
+          {
+            "event_name": "scroll",
+            "event_type": "track"
+          },
+          {
+            "event_name": "click",
+            "event_type": "track"
+          },
+          {
+            "event_name": "view_search_results",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_start",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_progress",
+            "event_type": "track"
+          },
+          {
+            "event_name": "video_complete",
+            "event_type": "track"
+          },
+          {
+            "event_name": "file_download",
+            "event_type": "track"
+          },
+          {
+            "event_name": "form_start",
+            "event_type": "track"
+          },
+          {
+            "event_name": "form_submit",
+            "event_type": "track"
+          }
+        ]
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
     "name": "ga4_automatic_events",
     "displayName": "GA4 automatically collected events",
     "groupStyle": "ZIPPY_OPEN",
@@ -654,7 +654,7 @@ ___TEMPLATE_PARAMETERS___
         "name": "ga4_automatic_events_enabled",
         "checkboxText": "Include GA4 automatically collected events",
         "simpleValueType": true,
-        "defaultValue": true
+        "defaultValue": false
       },
       {
         "type": "SIMPLE_TABLE",
