@@ -110,7 +110,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "NON_EMPTY"
       }
     ],
-    "defaultValue": "0.0.92",
+    "defaultValue": "latest",
     "enablingConditions": [
       {
         "paramName": "tag_type",
@@ -1024,9 +1024,9 @@ const getType = require('getType');
 const readTitle = require('readTitle');
 
 // constants
-const DEFAULT_SDK_VERSION = '0.0.91';
+const DEFAULT_SDK_VERSION = 'latest';
 const SDK_VERSION = data.sdk_version || DEFAULT_SDK_VERSION;
-const JS_URL = 'https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@'+SDK_VERSION+'/dist/_bundles/journifyio.min.js';
+const JS_URL = 'https://unpkg.com/@journifyio/js-sdk@'+SDK_VERSION+'/dist/_bundles/journifyio.min.js';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 
@@ -1555,7 +1555,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://cdn.jsdelivr.net/npm/@journifyio/js-sdk@*"
+                "string": "https://unpkg.com/@journifyio/js-sdk@*"
               }
             ]
           }
