@@ -924,8 +924,49 @@ ___TEMPLATE_PARAMETERS___
     "subParams": [
       {
         "type": "SIMPLE_TABLE",
-        "name": "additional_data_layer_properties",
+        "name": "data_layer_prop_values",
         "displayName": "Additional properties",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Key",
+            "name": "key",
+            "type": "TEXT"
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Value",
+            "name": "value",
+            "type": "TEXT"
+          }
+        ],
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "data_layer_event",
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "additional_property_keys",
+    "displayName": "Additional data layer property keys",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "additional_data_layer_properties",
+        "displayName": "Additional property key",
         "simpleTableColumns": [
           {
             "defaultValue": "",
@@ -1237,9 +1278,9 @@ const init = (journify) => {
         settings.cdnURL = data.cdn_url;
     }
 
-    if (dataHasField('local_cdn')) {
-        settings.localCdn = data.localCdn;
-    }
+
+    settings.localCdn = data.local_cdn;
+    log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
 
     journify.load(settings);
 
@@ -1282,6 +1323,8 @@ const page = (journify) => {
     }
 
     const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+
+    log(LOG_PREFIX + 'Page properties: ', properties);
     journify.page(pageName, properties);
 };
 
@@ -1445,6 +1488,11 @@ if (data.tag_type == 'data_layer_event') {
                 dataLayerEventProperties[key] = value;
             }
         }
+    }
+
+    if (dataHasField('data_layer_prop_values')) {
+        const props = makeTableMap(data.data_layer_prop_values || [], 'key', 'value');
+        copyObj(dataLayerEventProperties, props);
     }
 
     const ecommerce = copyFromDataLayer('ecommerce');
