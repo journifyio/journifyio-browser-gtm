@@ -164,40 +164,21 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "GROUP",
-    "name": "external_id",
-    "displayName": "External ID",
-    "groupStyle": "ZIPPY_OPEN",
-    "subParams": [
+    "type": "SIMPLE_TABLE",
+    "name": "external_ids",
+    "displayName": "External IDs",
+    "simpleTableColumns": [
       {
-        "type": "TEXT",
-        "name": "external_id_value",
-        "displayName": "External ID value",
-        "simpleValueType": true
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
       },
       {
-        "type": "TEXT",
-        "name": "external_id_type",
-        "displayName": "External ID type",
-        "simpleValueType": true
-      },
-      {
-        "type": "SELECT",
-        "name": "external_id_collection",
-        "displayName": "External ID collection",
-        "macrosInSelect": false,
-        "selectItems": [
-          {
-            "value": "users",
-            "displayValue": "users"
-          },
-          {
-            "value": "accounts",
-            "displayValue": "accounts"
-          }
-        ],
-        "simpleValueType": true,
-        "defaultValue": "users"
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
       }
     ],
     "enablingConditions": [
@@ -1008,6 +989,32 @@ ___TEMPLATE_PARAMETERS___
         "type": "EQUALS"
       }
     ]
+  },
+  {
+    "type": "TEXT",
+    "name": "cdn_url",
+    "displayName": "CDN url (optional)",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "local_cdn",
+    "checkboxText": "Use local CDN",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
   }
 ]
 
@@ -1226,6 +1233,14 @@ const init = (journify) => {
         }
     }
 
+    if (dataHasField('cdn_url')) {
+        settings.cdnURL = data.cdn_url;
+    }
+
+    if (dataHasField('local_cdn')) {
+        settings.localCdn = data.localCdn;
+    }
+
     journify.load(settings);
 
     if (data.track_page_view_on_init === true) {
@@ -1242,18 +1257,12 @@ const dataHasField = (fieldKey) => {
 
 const identify = (journify) => {
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
-    let externalID = null;
-    if (dataHasField('external_id_value') &&
-        dataHasField('external_id_type') &&
-        dataHasField('external_id_collection')) {
-        externalID = {
-            id: data.external_id_value,
-            type: data.external_id_type,
-            collection: data.external_id_collection,
-        };
+    let externalIDs = null;
+    if (dataHasField('external_ids')) {
+        externalIDs = makeTableMap(data.external_ids || [], 'key', 'value');
     }
 
-    journify.identify(data.user_id, traits, externalID);
+    journify.identify(data.user_id, traits, externalIDs);
 };
 
 const group = (journify) => {
@@ -1274,7 +1283,6 @@ const page = (journify) => {
 
     const properties = makeTableMap(data.page_properties || [], 'key', 'value');
     journify.page(pageName, properties);
-
 };
 
 const dataLayerEvent = (journify) => {
@@ -1315,7 +1323,7 @@ const dataLayerIdentify = (journify) => {
         return fail('`user_id` is required when calling `identify`');
     }
 
-    journify.identify(dataLayerUserID, dataLayerTraits,  dataLayerExternalId);
+    journify.identify(dataLayerUserID, dataLayerTraits,  dataLayerExternalIds);
 };
 
 const dataLayerGroup = (journify) => {
@@ -1393,7 +1401,7 @@ const onfailure = () => {
 let dataLayerEventName = null;
 let dataLayerEventProperties = null;
 let dataLayerUserID = null;
-let dataLayerExternalId = null;
+let dataLayerExternalIds = null;
 let dataLayerTraits = null;
 let dataLayerPageName = null;
 let dataLayerGroupId = null;
@@ -1401,7 +1409,7 @@ let dataLayerGroupId = null;
 if (data.tag_type == 'data_layer_event') {
     dataLayerEventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
     dataLayerUserID = copyFromDataLayer('user_id');
-    dataLayerExternalId = copyFromDataLayer('external_id');
+    dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};
     const traitsKeys = {
         'user_data.email_address': 'email',
