@@ -1043,19 +1043,6 @@ ___TEMPLATE_PARAMETERS___
         "type": "EQUALS"
       }
     ]
-  },
-  {
-    "type": "CHECKBOX",
-    "name": "local_cdn",
-    "checkboxText": "Use local CDN",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
   }
 ]
 
@@ -1279,7 +1266,6 @@ const init = (journify) => {
     }
 
 
-    settings.localCdn = data.local_cdn;
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
 
     journify.load(settings);

@@ -215,7 +215,6 @@ const init = (journify) => {
     }
 
 
-    settings.localCdn = data.local_cdn;
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
 
     journify.load(settings);
