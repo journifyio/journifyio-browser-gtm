@@ -1034,7 +1034,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "cdn_url",
-    "displayName": "CDN url (optional)",
+    "displayName": "Cdn URL (optional)",
     "simpleValueType": true,
     "enablingConditions": [
       {
