@@ -1033,8 +1033,8 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "cdn_url",
-    "displayName": "Cdn URL (optional)",
+    "name": "cdn_host",
+    "displayName": "Cdn host (optional)",
     "simpleValueType": true,
     "enablingConditions": [
       {
@@ -1261,8 +1261,8 @@ const init = (journify) => {
         }
     }
 
-    if (dataHasField('cdn_url')) {
-        settings.cdnURL = data.cdn_url;
+    if (dataHasField('cdn_host')) {
+        settings.cdnHost = data.cdn_host;
     }
 
 
@@ -1289,7 +1289,7 @@ const identify = (journify) => {
         externalIDs = makeTableMap(data.external_ids || [], 'key', 'value');
     }
 
-    journify.identify(data.user_id + "", traits, externalIDs);
+    journify.identify(data.user_id, traits, externalIDs);
 };
 
 const group = (journify) => {
@@ -1437,7 +1437,7 @@ let dataLayerGroupId = null;
 
 if (data.tag_type == 'data_layer_event') {
     dataLayerEventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
-    dataLayerUserID = copyFromDataLayer('user_id') + "" ;
+    dataLayerUserID = copyFromDataLayer('user_id');
     dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};
     const traitsKeys = {
