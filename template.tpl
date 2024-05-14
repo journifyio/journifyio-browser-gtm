@@ -1,12 +1,4 @@
-﻿___TERMS_OF_SERVICE___
-
-By creating or modifying this file you agree to Google Tag Manager's Community
-Template Gallery Developer Terms of Service available at
-https://developers.google.com/tag-manager/gallery-tos (or such other URL as
-Google may provide), as modified from time to time.
-
-
-___INFO___
+﻿___INFO___
 
 {
   "type": "TAG",
@@ -315,6 +307,25 @@ ___TEMPLATE_PARAMETERS___
         "type": "EQUALS"
       }
     ]
+  },
+  {
+    "type": "TEXT",
+    "name": "data_layer_event_name_key",
+    "displayName": "Data layer key for event name",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
+      }
+    ],
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ],
+    "defaultValue": "event"
   },
   {
     "type": "GROUP",
@@ -1438,7 +1449,8 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'data_layer_event') {
-    dataLayerEventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
+    const eventNameKey = dataHasField('data_layer_event_name_key') ? data.data_layer_event_name_key : 'event';
+    dataLayerEventName = copyFromDataLayer(eventNameKey) || copyFromDataLayer('event_name');
     dataLayerUserID = copyFromDataLayer('user_id');
     dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};
