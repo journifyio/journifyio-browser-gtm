@@ -387,7 +387,8 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'data_layer_event') {
-    dataLayerEventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
+    const eventNameKey = dataHasField('data_layer_event_name_key') ? data.data_layer_event_name_key : 'event';
+    dataLayerEventName = copyFromDataLayer(eventNameKey) || copyFromDataLayer('event_name');
     dataLayerUserID = copyFromDataLayer('user_id');
     dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};

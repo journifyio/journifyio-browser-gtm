@@ -871,6 +871,25 @@ ___TEMPLATE_PARAMETERS___
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
+        "type": "TEXT",
+        "name": "data_layer_event_name_key",
+        "displayName": "Data layer key for event name",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "data_layer_event",
+            "type": "EQUALS"
+          }
+        ],
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ],
+        "defaultValue": "event"
+      },
+      {
         "type": "SIMPLE_TABLE",
         "name": "data_layer_additional_mappings",
         "displayName": "Data layer additional mappings",
@@ -1062,6 +1081,7 @@ const readTitle = require('readTitle');
 const DEFAULT_SDK_VERSION = 'latest';
 const SDK_VERSION = data.sdk_version || DEFAULT_SDK_VERSION;
 const JS_URL = 'https://static.journify.io/@journifyio/js-sdk@'+SDK_VERSION+'/journifyio.min.js';
+
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 
@@ -1438,7 +1458,8 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'data_layer_event') {
-    dataLayerEventName = copyFromDataLayer('event') || copyFromDataLayer('event_name');
+    const eventNameKey = dataHasField('data_layer_event_name_key') ? data.data_layer_event_name_key : 'event';
+    dataLayerEventName = copyFromDataLayer(eventNameKey) || copyFromDataLayer('event_name');
     dataLayerUserID = copyFromDataLayer('user_id');
     dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};
