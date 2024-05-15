@@ -1426,7 +1426,7 @@ const dataLayerGroup = (journify) => {
 };
 
 const dataLayerTrack = (journify, eventName) => {
-    journify.track(eventName, dataLayerEventProperties);
+    journify.track(eventName, dataLayerEventProperties, dataLayerTraits);
 };
 
 const dataLayerPage = (journify) => {
@@ -1434,7 +1434,7 @@ const dataLayerPage = (journify) => {
         dataLayerPageName = readTitle();
     }
 
-    journify.page(dataLayerPageName, dataLayerEventProperties);
+    journify.page(dataLayerPageName, dataLayerEventProperties, dataLayerTraits);
 };
 
 const getDataLayerMappedEvents = () => {
