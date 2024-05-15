@@ -1,12 +1,4 @@
-﻿___TERMS_OF_SERVICE___
-
-By creating or modifying this file you agree to Google Tag Manager's Community
-Template Gallery Developer Terms of Service available at
-https://developers.google.com/tag-manager/gallery-tos (or such other URL as
-Google may provide), as modified from time to time.
-
-
-___INFO___
+﻿___INFO___
 
 {
   "type": "TAG",
@@ -138,6 +130,89 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
+    "type": "TEXT",
+    "name": "event_name",
+    "displayName": "Event name",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      }
+    ],
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "page_name",
+    "displayName": "Page name",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "track_properties",
+    "displayName": "Event properties",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "page_properties",
+    "displayName": "Page properties",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
     "type": "SIMPLE_TABLE",
     "name": "user_traits",
     "displayName": "User traits",
@@ -159,6 +234,21 @@ ___TEMPLATE_PARAMETERS___
       {
         "paramName": "tag_type",
         "paramValue": "identify",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
         "type": "EQUALS"
       }
     ]
@@ -190,85 +280,30 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "TEXT",
-    "name": "event_name",
-    "displayName": "Event name",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "track",
-        "type": "EQUALS"
-      }
-    ],
-    "valueValidators": [
-      {
-        "type": "NON_EMPTY"
-      }
-    ]
-  },
-  {
     "type": "SIMPLE_TABLE",
-    "name": "track_properties",
-    "displayName": "Event properties",
+    "name": "data_layer_trait_keys",
+    "displayName": "Data Layer user trait keys",
     "simpleTableColumns": [
       {
         "defaultValue": "",
-        "displayName": "Key",
-        "name": "key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Value",
-        "name": "value",
+        "displayName": "Trait Key",
+        "name": "trait_key",
         "type": "TEXT"
       }
     ],
     "enablingConditions": [
       {
         "paramName": "tag_type",
-        "paramValue": "track",
+        "paramValue": "data_layer_event",
         "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "page_name",
-    "displayName": "Page name",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
-    "name": "page_properties",
-    "displayName": "Page properties",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Key",
-        "name": "key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Value",
-        "name": "value",
-        "type": "TEXT"
       }
     ],
-    "enablingConditions": [
+    "defaultValue": [
       {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
+        "trait_key": "ecommerce.email"
+      },
+      {
+        "trait_key": "ecommerce.phone"
       }
     ]
   },
@@ -1081,7 +1116,6 @@ const readTitle = require('readTitle');
 const DEFAULT_SDK_VERSION = 'latest';
 const SDK_VERSION = data.sdk_version || DEFAULT_SDK_VERSION;
 const JS_URL = 'https://static.journify.io/@journifyio/js-sdk@'+SDK_VERSION+'/journifyio.min.js';
-
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 
@@ -1109,7 +1143,6 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'currency',
     'deferred_analytics_collection',
     'discount',
-    'email',
     'engagement_time_msec',
     'exposure_time',
     'fatal',
@@ -1168,7 +1201,6 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'page_referrer',
     'page_title',
     'payment_type',
-    'phone',
     'previous_first_open_count',
     'previous_gmp_app_id',
     'previous_os_version',
@@ -1321,7 +1353,8 @@ const group = (journify) => {
 
 const track = (journify) => {
     const properties = makeTableMap(data.track_properties || [], 'key', 'value');
-    journify.track(data.event_name, properties);
+    const traits = makeTableMap(data.user_traits || [], 'key', 'value');
+    journify.track(data.event_name, properties, traits);
 };
 
 const page = (journify) => {
@@ -1331,9 +1364,9 @@ const page = (journify) => {
     }
 
     const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+    const traits = makeTableMap(data.user_traits || [], 'key', 'value');
 
-    log(LOG_PREFIX + 'Page properties: ', properties);
-    journify.page(pageName, properties);
+    journify.page(pageName, properties, traits);
 };
 
 const dataLayerEvent = (journify) => {
@@ -1454,6 +1487,7 @@ let dataLayerEventProperties = null;
 let dataLayerUserID = null;
 let dataLayerExternalIds = null;
 let dataLayerTraits = null;
+
 let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
@@ -1463,6 +1497,7 @@ if (data.tag_type == 'data_layer_event') {
     dataLayerUserID = copyFromDataLayer('user_id');
     dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};
+
     const traitsKeys = {
         'user_data.email_address': 'email',
         'user_data.phone_number': 'phone',
@@ -1482,6 +1517,26 @@ if (data.tag_type == 'data_layer_event') {
         const value = copyFromDataLayer(key);
         if (value) {
             dataLayerTraits[journifyKey] = value;
+        }
+    }
+
+    if (dataHasField('user_traits')) {
+        for (let i = 0; i < data.user_traits.length; i++) {
+            const key = data.user_traits[i].key;
+            const value = data.user_traits[i].value;
+            if (value) {
+                dataLayerTraits[key] = value;
+            }
+        }
+    }
+
+    if (dataHasField('data_layer_trait_keys')) {
+        for (let i = 0; i < data.data_layer_trait_keys.length; i++) {
+            const key = data.data_layer_trait_keys[i].trait_key;
+            const value = copyFromDataLayer(key);
+            if (value) {
+                dataLayerTraits[key] = value;
+            }
         }
     }
 
