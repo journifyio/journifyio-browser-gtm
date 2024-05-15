@@ -1,4 +1,12 @@
-﻿___INFO___
+﻿___TERMS_OF_SERVICE___
+
+By creating or modifying this file you agree to Google Tag Manager's Community
+Template Gallery Developer Terms of Service available at
+https://developers.google.com/tag-manager/gallery-tos (or such other URL as
+Google may provide), as modified from time to time.
+
+
+___INFO___
 
 {
   "type": "TAG",
@@ -307,25 +315,6 @@ ___TEMPLATE_PARAMETERS___
         "type": "EQUALS"
       }
     ]
-  },
-  {
-    "type": "TEXT",
-    "name": "data_layer_event_name_key",
-    "displayName": "Data layer key for event name",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "data_layer_event",
-        "type": "EQUALS"
-      }
-    ],
-    "valueValidators": [
-      {
-        "type": "NON_EMPTY"
-      }
-    ],
-    "defaultValue": "event"
   },
   {
     "type": "GROUP",
@@ -882,6 +871,25 @@ ___TEMPLATE_PARAMETERS___
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
+        "type": "TEXT",
+        "name": "data_layer_event_name_key",
+        "displayName": "Data layer key for event name",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "data_layer_event",
+            "type": "EQUALS"
+          }
+        ],
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
+        ],
+        "defaultValue": "event"
+      },
+      {
         "type": "SIMPLE_TABLE",
         "name": "data_layer_additional_mappings",
         "displayName": "Data layer additional mappings",
@@ -1073,6 +1081,7 @@ const readTitle = require('readTitle');
 const DEFAULT_SDK_VERSION = 'latest';
 const SDK_VERSION = data.sdk_version || DEFAULT_SDK_VERSION;
 const JS_URL = 'https://static.journify.io/@journifyio/js-sdk@'+SDK_VERSION+'/journifyio.min.js';
+
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 
