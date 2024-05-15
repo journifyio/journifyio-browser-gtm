@@ -38,7 +38,6 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'currency',
     'deferred_analytics_collection',
     'discount',
-    'email',
     'engagement_time_msec',
     'exposure_time',
     'fatal',
@@ -97,7 +96,6 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'page_referrer',
     'page_title',
     'payment_type',
-    'phone',
     'previous_first_open_count',
     'previous_gmp_app_id',
     'previous_os_version',
@@ -250,7 +248,8 @@ const group = (journify) => {
 
 const track = (journify) => {
     const properties = makeTableMap(data.track_properties || [], 'key', 'value');
-    journify.track(data.event_name, properties);
+    const traits = makeTableMap(data.user_traits || [], 'key', 'value');
+    journify.track(data.event_name, properties, traits);
 };
 
 const page = (journify) => {
@@ -260,9 +259,9 @@ const page = (journify) => {
     }
 
     const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+    const traits = makeTableMap(data.user_traits || [], 'key', 'value');
 
-    log(LOG_PREFIX + 'Page properties: ', properties);
-    journify.page(pageName, properties);
+    journify.page(pageName, properties, traits);
 };
 
 const dataLayerEvent = (journify) => {
@@ -383,6 +382,7 @@ let dataLayerEventProperties = null;
 let dataLayerUserID = null;
 let dataLayerExternalIds = null;
 let dataLayerTraits = null;
+
 let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
@@ -392,6 +392,7 @@ if (data.tag_type == 'data_layer_event') {
     dataLayerUserID = copyFromDataLayer('user_id');
     dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};
+
     const traitsKeys = {
         'user_data.email_address': 'email',
         'user_data.phone_number': 'phone',
@@ -411,6 +412,26 @@ if (data.tag_type == 'data_layer_event') {
         const value = copyFromDataLayer(key);
         if (value) {
             dataLayerTraits[journifyKey] = value;
+        }
+    }
+
+    if (dataHasField('user_traits')) {
+        for (let i = 0; i < data.user_traits.length; i++) {
+            const key = data.user_traits[i].key;
+            const value = data.user_traits[i].value;
+            if (value) {
+                dataLayerTraits[key] = value;
+            }
+        }
+    }
+
+    if (dataHasField('data_layer_trait_keys')) {
+        for (let i = 0; i < data.data_layer_trait_keys.length; i++) {
+            const key = data.data_layer_trait_keys[i].trait_key;
+            const value = copyFromDataLayer(key);
+            if (value) {
+                dataLayerTraits[key] = value;
+            }
         }
     }
 
