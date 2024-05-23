@@ -304,14 +304,6 @@ ___TEMPLATE_PARAMETERS___
         "paramValue": "data_layer_event",
         "type": "EQUALS"
       }
-    ],
-    "defaultValue": [
-      {
-        "trait_key": "ecommerce.email"
-      },
-      {
-        "trait_key": "ecommerce.phone"
-      }
     ]
   },
   {
