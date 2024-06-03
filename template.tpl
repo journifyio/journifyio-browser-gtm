@@ -172,7 +172,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "TEXT"
       },
       {
-        "defaultValue": "",
+        "defaultValue": "text",
         "displayName": "Type",
         "name": "type",
         "type": "SELECT",
@@ -218,7 +218,7 @@ ___TEMPLATE_PARAMETERS___
         "type": "TEXT"
       },
       {
-        "defaultValue": "",
+        "defaultValue": "text",
         "displayName": "Type",
         "name": "type",
         "type": "SELECT",
@@ -1020,7 +1020,7 @@ ___TEMPLATE_PARAMETERS___
             "type": "TEXT"
           },
           {
-            "defaultValue": "",
+            "defaultValue": "text",
             "displayName": "Type",
             "name": "type",
             "type": "SELECT",
