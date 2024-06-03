@@ -1,11 +1,4 @@
-﻿___TERMS_OF_SERVICE___
-
-By creating or modifying this file you agree to Google Tag Manager's Community
-Template Gallery Developer Terms of Service available at
-https://developers.google.com/tag-manager/gallery-tos (or such other URL as
-Google may provide), as modified from time to time.
-
-___INFO___
+﻿___INFO___
 
 {
   "type": "TAG",
@@ -180,6 +173,26 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "defaultValue": "",
+        "displayName": "Type",
+        "name": "type",
+        "type": "SELECT",
+        "selectItems": [
+          {
+            "value": "text",
+            "displayValue": "Text"
+          },
+          {
+            "value": "number",
+            "displayValue": "Number"
+          },
+          {
+            "value": "json",
+            "displayValue": "JSON"
+          }
+        ]
+      },
+      {
+        "defaultValue": "",
         "displayName": "Value",
         "name": "value",
         "type": "TEXT"
@@ -203,6 +216,26 @@ ___TEMPLATE_PARAMETERS___
         "displayName": "Key",
         "name": "key",
         "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Type",
+        "name": "type",
+        "type": "SELECT",
+        "selectItems": [
+          {
+            "value": "text",
+            "displayValue": "Text"
+          },
+          {
+            "value": "number",
+            "displayValue": "Number"
+          },
+          {
+            "value": "json",
+            "displayValue": "JSON"
+          }
+        ]
       },
       {
         "defaultValue": "",
@@ -988,6 +1021,26 @@ ___TEMPLATE_PARAMETERS___
           },
           {
             "defaultValue": "",
+            "displayName": "Type",
+            "name": "type",
+            "type": "SELECT",
+            "selectItems": [
+              {
+                "value": "text",
+                "displayValue": "Text"
+              },
+              {
+                "value": "number",
+                "displayValue": "Number"
+              },
+              {
+                "value": "json",
+                "displayValue": "JSON"
+              }
+            ]
+          },
+          {
+            "defaultValue": "",
             "displayName": "Value",
             "name": "value",
             "type": "TEXT"
@@ -1110,6 +1163,7 @@ const copyFromWindow = require('copyFromWindow');
 const copyFromDataLayer = require('copyFromDataLayer');
 const getType = require('getType');
 const readTitle = require('readTitle');
+const JSON = require('JSON');
 
 // constants
 const DEFAULT_SDK_VERSION = 'latest';
@@ -1351,7 +1405,7 @@ const group = (journify) => {
 };
 
 const track = (journify) => {
-    const properties = makeTableMap(data.track_properties || [], 'key', 'value');
+    const properties = buildProperties(data.track_properties);
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
     journify.track(data.event_name, properties, traits);
 };
@@ -1362,10 +1416,31 @@ const page = (journify) => {
         pageName = readTitle();
     }
 
-    const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+    const properties = buildProperties(data.page_properties);
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
 
     journify.page(pageName, properties, traits);
+};
+
+const buildProperties = (config) => {
+    const properties = {};
+    for (let i = 0; i < config.length; i++) {
+        const key = config[i].key;
+        const value = config[i].value;
+        switch (config[i].type) {
+            case 'text':
+                properties[key] = value;
+                break;
+            case 'number':
+                properties[key] = makeNumber(value);
+                break;
+            case 'json':
+                properties[key] = JSON.parse(value);
+                break;
+        }
+    }
+
+    return properties;
 };
 
 const dataLayerEvent = (journify) => {
@@ -1554,7 +1629,7 @@ if (data.tag_type == 'data_layer_event') {
     }
 
     if (dataHasField('data_layer_prop_values')) {
-        const props = makeTableMap(data.data_layer_prop_values || [], 'key', 'value');
+        const props = buildProperties(data.data_layer_prop_values);
         copyObj(dataLayerEventProperties, props);
     }
 

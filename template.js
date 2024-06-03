@@ -6,6 +6,7 @@ const copyFromWindow = require('copyFromWindow');
 const copyFromDataLayer = require('copyFromDataLayer');
 const getType = require('getType');
 const readTitle = require('readTitle');
+const JSON = require('JSON');
 
 // constants
 const DEFAULT_SDK_VERSION = 'latest';
@@ -247,7 +248,7 @@ const group = (journify) => {
 };
 
 const track = (journify) => {
-    const properties = makeTableMap(data.track_properties || [], 'key', 'value');
+    const properties = buildProperties(data.track_properties);
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
     journify.track(data.event_name, properties, traits);
 };
@@ -258,10 +259,31 @@ const page = (journify) => {
         pageName = readTitle();
     }
 
-    const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+    const properties = buildProperties(data.page_properties);
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
 
     journify.page(pageName, properties, traits);
+};
+
+const buildProperties = (config) => {
+    const properties = {};
+    for (let i = 0; i < config.length; i++) {
+        const key = config[i].key;
+        const value = config[i].value;
+        switch (config[i].type) {
+            case 'text':
+                properties[key] = value;
+                break;
+            case 'number':
+                properties[key] = makeNumber(value);
+                break;
+            case 'json':
+                properties[key] = JSON.parse(value);
+                break;
+        }
+    }
+
+    return properties;
 };
 
 const dataLayerEvent = (journify) => {
@@ -450,7 +472,7 @@ if (data.tag_type == 'data_layer_event') {
     }
 
     if (dataHasField('data_layer_prop_values')) {
-        const props = makeTableMap(data.data_layer_prop_values || [], 'key', 'value');
+        const props = buildProperties(data.data_layer_prop_values);
         copyObj(dataLayerEventProperties, props);
     }
 
