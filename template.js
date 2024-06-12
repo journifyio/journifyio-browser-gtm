@@ -191,6 +191,7 @@ const init = (journify) => {
 
     const settings = {
         writeKey: data.write_key,
+        options: {}
     };
 
     if (dataHasField('api_host')) {
@@ -198,7 +199,7 @@ const init = (journify) => {
     }
 
     if (dataHasField('cookie_domain')) {
-        settings.cookie = {
+        settings.options.cookie = {
             domain: data.cookie_domain,
         };
     }
@@ -206,14 +207,23 @@ const init = (journify) => {
     if (dataHasField('session_duration_min')){
         const sessionDurationMin = makeNumber(data.session_duration_min);
         if (typeof sessionDurationMin !== 'undefined') {
-            settings.sessionDurationMin = sessionDurationMin;
+            settings.options.sessionDurationMin = sessionDurationMin;
         }
     }
 
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
+    
+    if (dataHasField('http_cookie_service_renew_endpoint')){
+        settings.options.httpCookieServiceOptions = {
+            renewUrl: data.http_cookie_service_renew_endpoint
+        };
+    }
 
+    if (data.auto_capture_pii === true){
+        settings.options.auto_capture_pii = data.auto_capture_pii;
+    }
 
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
 

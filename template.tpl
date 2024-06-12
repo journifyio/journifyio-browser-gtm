@@ -1096,6 +1096,27 @@ ___TEMPLATE_PARAMETERS___
         "type": "EQUALS"
       }
     ]
+  },
+  {
+    "type": "TEXT",
+    "name": "http_cookie_service_renew_endpoint",
+    "simpleValueType": true,
+    "help": "If you want to know how to set this up read docs: https://docs.journify.io/tracking/first-party-tracking#server-setup",
+    "canBeEmptyString": true,
+    "displayName": "HTTP Cookie Service Renew Endpoint (optional)",
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "auto_capture_pii",
+    "checkboxText": "Auto Capture PII (optional)",
+    "simpleValueType": true
   }
 ]
 
@@ -1295,6 +1316,7 @@ const init = (journify) => {
 
     const settings = {
         writeKey: data.write_key,
+        options: {}
     };
 
     if (dataHasField('api_host')) {
@@ -1302,7 +1324,7 @@ const init = (journify) => {
     }
 
     if (dataHasField('cookie_domain')) {
-        settings.cookie = {
+        settings.options.cookie = {
             domain: data.cookie_domain,
         };
     }
@@ -1310,14 +1332,23 @@ const init = (journify) => {
     if (dataHasField('session_duration_min')){
         const sessionDurationMin = makeNumber(data.session_duration_min);
         if (typeof sessionDurationMin !== 'undefined') {
-            settings.sessionDurationMin = sessionDurationMin;
+            settings.options.sessionDurationMin = sessionDurationMin;
         }
     }
 
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
+    
+    if (dataHasField('http_cookie_service_renew_endpoint')){
+        settings.options.httpCookieServiceOptions = {
+            renewUrl: data.http_cookie_service_renew_endpoint
+        };
+    }
 
+    if (dataHasField('auto_capture_pii')){
+        settings.options.auto_capture_pii = data.auto_capture_pii;
+    }
 
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
 
@@ -1332,7 +1363,13 @@ const init = (journify) => {
 
 const dataHasField = (fieldKey) => {
     const val = data[fieldKey];
-    return val && val.length > 0;
+    switch(typeof val){
+        case "boolean":
+        case "number":
+            return val;
+        default:
+            return val && val.length > 0;
+    }
 };
 
 const identify = (journify) => {
