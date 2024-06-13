@@ -183,11 +183,10 @@ const init = () => {
     const journifyCalls = copyFromWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY);
     if (journifyCalls) {
         for (let i = 0; i < journifyCalls.length; i++) {
-            journifyCalls[i]();
+            journifyCalls[i](journify);
         }
+        setInWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY, [], true);
     }
-
-    setInWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY, [], true);
 
     if (data.track_page_view_on_init === true) {
         page();
@@ -434,10 +433,7 @@ const journifyWrapper = {
         if (journify) {
             journify.identify(userId, traits, externalIds);
         } else {
-            recordCall(() => {
-                const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
-                journify.identify(userId, traits, externalIds);
-            });
+            recordCall((journify) => journify.identify(userId, traits, externalIds));
         }
     },
     group: (groupId, traits) => {
@@ -445,10 +441,7 @@ const journifyWrapper = {
         if (journify) {
             journify.group(groupId, traits);
         } else {
-            recordCall(() => {
-                const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
-                journify.group(groupId, traits);
-            });
+            recordCall((journify) => journify.group(groupId, traits));
         }
     },
     track: (eventName, properties, traits) => {
@@ -456,10 +449,7 @@ const journifyWrapper = {
         if (journify) {
             journify.track(eventName, properties, traits);
         } else {
-            recordCall(() => {
-                const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
-                journify.track(eventName, properties, traits);
-            });
+            recordCall((journify) => journify.track(eventName, properties, traits));
         }
     },
     page: (pageName, properties, traits) => {
@@ -467,10 +457,7 @@ const journifyWrapper = {
         if (journify) {
             journify.page(pageName, properties, traits);
         } else {
-            recordCall(() => {
-                const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
-                journify.page(pageName, properties, traits);
-            });
+            recordCall((journify) => journify.page(pageName, properties, traits));
         }
     },
 };
@@ -482,7 +469,7 @@ const recordCall = (call) => {
     }
 
     journifyCalls.push(call);
-    setInWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY, journifyCalls);
+    setInWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY, journifyCalls, true);
 };
 
 // Main
