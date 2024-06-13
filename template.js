@@ -14,8 +14,6 @@ const JS_URL = 'https://static.journify.io/@journifyio/js-sdk@'+SDK_VERSION+'/jo
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 
-log(LOG_PREFIX + " Loading JS_URL:" + JS_URL);
-
 const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'accept_time',
     'achievement_id',
@@ -483,5 +481,6 @@ if (data.tag_type == 'data_layer_event') {
 
 log(LOG_PREFIX + ' Tag is fired with Event name from data layer `'+ dataLayerEventName +'` and tag_type `'+ data.tag_type +'`');
 
-// inject the Journify JavaScript SDK
+
+// inject the Journify JavaScript SDK only on Init
 injectScript(JS_URL, onsuccess, onfailure, 'journify');
