@@ -137,89 +137,6 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "TEXT",
-    "name": "event_name",
-    "displayName": "Event name",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "track",
-        "type": "EQUALS"
-      }
-    ],
-    "valueValidators": [
-      {
-        "type": "NON_EMPTY"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "page_name",
-    "displayName": "Page name",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
-    "name": "track_properties",
-    "displayName": "Event properties",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Key",
-        "name": "key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Value",
-        "name": "value",
-        "type": "TEXT"
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "track",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
-    "name": "page_properties",
-    "displayName": "Page properties",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Key",
-        "name": "key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Value",
-        "name": "value",
-        "type": "TEXT"
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
     "type": "SIMPLE_TABLE",
     "name": "user_traits",
     "displayName": "User traits",
@@ -241,21 +158,6 @@ ___TEMPLATE_PARAMETERS___
       {
         "paramName": "tag_type",
         "paramValue": "identify",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "tag_type",
-        "paramValue": "track",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "tag_type",
-        "paramValue": "data_layer_event",
         "type": "EQUALS"
       }
     ]
@@ -287,21 +189,84 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
+    "type": "TEXT",
+    "name": "event_name",
+    "displayName": "Event name",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      }
+    ],
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ]
+  },
+  {
     "type": "SIMPLE_TABLE",
-    "name": "data_layer_trait_keys",
-    "displayName": "Data Layer user trait keys",
+    "name": "track_properties",
+    "displayName": "Event properties",
     "simpleTableColumns": [
       {
         "defaultValue": "",
-        "displayName": "Trait Key",
-        "name": "trait_key",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
         "type": "TEXT"
       }
     ],
     "enablingConditions": [
       {
         "paramName": "tag_type",
-        "paramValue": "data_layer_event",
+        "paramValue": "track",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "page_name",
+    "displayName": "Page name",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "page_properties",
+    "displayName": "Page properties",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
         "type": "EQUALS"
       }
     ]
@@ -905,25 +870,6 @@ ___TEMPLATE_PARAMETERS___
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
-        "type": "TEXT",
-        "name": "data_layer_event_name_key",
-        "displayName": "Data layer key for event name",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "data_layer_event",
-            "type": "EQUALS"
-          }
-        ],
-        "valueValidators": [
-          {
-            "type": "NON_EMPTY"
-          }
-        ],
-        "defaultValue": "event"
-      },
-      {
         "type": "SIMPLE_TABLE",
         "name": "data_layer_additional_mappings",
         "displayName": "Data layer additional mappings",
@@ -1060,32 +1006,6 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "cookie_domain",
-    "displayName": "Cookie domain (optional)",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "session_duration_min",
-    "displayName": "Session duration in minutes (optional)",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
     "name": "cdn_host",
     "displayName": "Cdn host (optional)",
     "simpleValueType": true,
@@ -1094,6 +1014,84 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "tag_type",
         "paramValue": "init",
         "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "options",
+    "displayName": "Additional Options",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "enable_hashing",
+        "checkboxText": "Enable Hashing",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ],
+        "help": "Enabling this option will hash all first-party data on the client side."
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "auto_capture_pii",
+        "checkboxText": "Auto Capture PII",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ],
+        "help": "Enabling this option will automatically capture PII on any page."
+      },
+      {
+        "type": "TEXT",
+        "name": "session_duration_min",
+        "displayName": "Session duration in minutes (optional)",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "cookie_domain",
+        "displayName": "Cookie domain (optional)",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "http_cookie_service_renew_endpoint",
+        "simpleValueType": true,
+        "help": "For setup instructions, refer to the documentation: https://docs.journify.io/tracking/first-party-tracking#server-setup",
+        "canBeEmptyString": true,
+        "displayName": "HTTP Cookie Service Renew Endpoint (optional)",
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ],
+        "valueHint": "/jrf/renew"
       }
     ]
   }
@@ -1117,6 +1115,8 @@ const DEFAULT_SDK_VERSION = 'latest';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 const JOURNIFY_GTM_CALLS_WINDOW_KEY = 'journifyGtmCalls';
+
+log(LOG_PREFIX + " Loading JS_URL:" + JS_URL);
 
 const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'accept_time',
@@ -1256,6 +1256,7 @@ const init = () => {
 
     const settings = {
         writeKey: data.write_key,
+        options: {}
     };
 
     if (dataHasField('api_host')) {
@@ -1263,7 +1264,7 @@ const init = () => {
     }
 
     if (dataHasField('cookie_domain')) {
-        settings.cookie = {
+        settings.options.cookie = {
             domain: data.cookie_domain,
         };
     }
@@ -1271,14 +1272,27 @@ const init = () => {
     if (dataHasField('session_duration_min')){
         const sessionDurationMin = makeNumber(data.session_duration_min);
         if (typeof sessionDurationMin !== 'undefined') {
-            settings.sessionDurationMin = sessionDurationMin;
+            settings.options.sessionDurationMin = sessionDurationMin;
         }
     }
 
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
+    
+    if (dataHasField('http_cookie_service_renew_endpoint')){
+        settings.options.httpCookieServiceOptions = {
+            renewUrl: data.http_cookie_service_renew_endpoint
+        };
+    }
 
+    if (data.auto_capture_pii === true){
+        settings.options.auto_capture_pii = data.auto_capture_pii;
+    }
+   
+    if (data.enable_hashing === true){
+        settings.options.enable_hashing = true;
+    }
 
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
 
