@@ -1772,7 +1772,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://static.journify.dev/@journifyio/js-sdk@*"
+                "string": "https://static.journify.io/@journifyio/js-sdk@*"
               }
             ]
           }
