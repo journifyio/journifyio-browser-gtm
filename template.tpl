@@ -1107,16 +1107,16 @@ const log = require('logToConsole');
 const makeNumber = require('makeNumber');
 const makeTableMap = require('makeTableMap');
 const copyFromWindow = require('copyFromWindow');
+const setInWindow = require('setInWindow');
 const copyFromDataLayer = require('copyFromDataLayer');
 const getType = require('getType');
 const readTitle = require('readTitle');
 
 // constants
 const DEFAULT_SDK_VERSION = 'latest';
-const SDK_VERSION = data.sdk_version || DEFAULT_SDK_VERSION;
-const JS_URL = 'https://static.journify.io/@journifyio/js-sdk@'+SDK_VERSION+'/journifyio.min.js';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
+const JOURNIFY_GTM_CALLS_WINDOW_KEY = 'journifyGtmCalls';
 
 const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'accept_time',
@@ -1248,47 +1248,8 @@ const fail = msg => {
     return data.gtmOnFailure();
 };
 
-const onsuccess = () => {
+const init = () => {
     const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
-    if (!journify) {
-        return fail('Failed to load the window.journify');
-    }
-
-    switch(data.tag_type) {
-        case 'init':
-            init(journify);
-            break;
-
-        case 'identify':
-            identify(journify);
-            break;
-
-        case 'group':
-            group(journify);
-            break;
-
-        case 'track':
-            track(journify);
-            break;
-
-        case 'page':
-            page(journify);
-            break;
-
-        case 'data_layer_event':
-            dataLayerEvent(journify);
-            break;
-
-        default:
-            log(LOG_PREFIX + ' Unsupported tag type `'+ data.tag_type +'`, skipping');
-            break;
-    }
-
-
-    data.gtmOnSuccess();
-};
-
-const init = (journify) => {
     if (!dataHasField('write_key')) {
         return fail('`write_key` setting is required when calling `load`');
     }
@@ -1323,11 +1284,20 @@ const init = (journify) => {
 
     journify.load(settings);
 
+    const journifyCalls = copyFromWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY);
+    if (journifyCalls) {
+        for (let i = 0; i < journifyCalls.length; i++) {
+            journifyCalls[i](journify);
+        }
+        setInWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY, [], true);
+    }
+
     if (data.track_page_view_on_init === true) {
-        page(journify);
+        page();
     }
 
     log(LOG_PREFIX + 'Success: initializing Journify SDK');
+    data.gtmOnSuccess();
 };
 
 const dataHasField = (fieldKey) => {
@@ -1335,28 +1305,28 @@ const dataHasField = (fieldKey) => {
     return val && val.length > 0;
 };
 
-const identify = (journify) => {
+const identify = () => {
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
-    let externalIDs = null;
+    let externalIds = null;
     if (dataHasField('external_ids')) {
-        externalIDs = makeTableMap(data.external_ids || [], 'key', 'value');
+        externalIds = makeTableMap(data.external_ids || [], 'key', 'value');
     }
 
-    journify.identify(data.user_id, traits, externalIDs);
+    journifyWrapper.identify(data.user_id, traits, externalIds);
 };
 
-const group = (journify) => {
+const group = () => {
     const traits = makeTableMap(data.group_traits || [], 'key', 'value');
-    journify.group(data.group_id, traits);
+    journifyWrapper.group(data.group_id, traits);
 };
 
-const track = (journify) => {
+const track = () => {
     const properties = makeTableMap(data.track_properties || [], 'key', 'value');
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
-    journify.track(data.event_name, properties, traits);
+    journifyWrapper.track(data.event_name, properties, traits);
 };
 
-const page = (journify) => {
+const page = () => {
     let pageName = data.page_name;
     if (!pageName) {
         pageName = readTitle();
@@ -1365,10 +1335,11 @@ const page = (journify) => {
     const properties = makeTableMap(data.page_properties || [], 'key', 'value');
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
 
-    journify.page(pageName, properties, traits);
+    journifyWrapper.page(pageName, properties, traits);
 };
 
-const dataLayerEvent = (journify) => {
+const dataLayerEvent = () => {
+    initDataLayerVariables();
     const eventsMap = getDataLayerMappedEvents();
     if (!dataLayerEventName) {
         log(LOG_PREFIX + ' Event name is not defined, skipping event');
@@ -1376,6 +1347,7 @@ const dataLayerEvent = (journify) => {
     }
 
     const eventType = eventsMap[dataLayerEventName];
+    log(LOG_PREFIX + ' eventType', eventType);
     if (!eventType) {
         log(LOG_PREFIX + 'Event name`'+ dataLayerEventName +'` is not mapped, skipping event');
         return;
@@ -1383,16 +1355,16 @@ const dataLayerEvent = (journify) => {
 
     switch(eventType) {
         case 'identify':
-            dataLayerIdentify(journify);
+            dataLayerIdentify();
             break;
         case 'group':
-            dataLayerGroup(journify);
+            dataLayerGroup();
             break;
         case 'track':
-            dataLayerTrack(journify, dataLayerEventName);
+            dataLayerTrack(dataLayerEventName);
             break;
         case 'page':
-            dataLayerPage(journify);
+            dataLayerPage();
             break;
         default:
             log(LOG_PREFIX + 'Event name`'+ dataLayerEventName +'` is mapped to unsupported event type `'+ eventType +'`, skipping event');
@@ -1401,99 +1373,10 @@ const dataLayerEvent = (journify) => {
 
 };
 
-const dataLayerIdentify = (journify) => {
-    if (!dataLayerUserID) {
-        return fail('`user_id` is required when calling `identify`');
-    }
-
-    journify.identify(dataLayerUserID, dataLayerTraits,  dataLayerExternalIds);
-};
-
-const dataLayerGroup = (journify) => {
-    if (!dataLayerGroupId) {
-        return fail('`group_id` is required when calling `group`');
-    }
-
-    journify.group(dataLayerGroupId, dataLayerTraits);
-};
-
-const dataLayerTrack = (journify, eventName) => {
-    journify.track(eventName, dataLayerEventProperties, dataLayerTraits);
-};
-
-const dataLayerPage = (journify) => {
-    if (!dataLayerPageName) {
-        dataLayerPageName = readTitle();
-    }
-
-    journify.page(dataLayerPageName, dataLayerEventProperties, dataLayerTraits);
-};
-
-const getDataLayerMappedEvents = () => {
-    const mappings = [];
-    if (data.ga4_enhannced_events_enabled === true && data.ga4_enhannced_events_mapping && data.ga4_enhannced_events_mapping.length > 0) {
-        mappings.push(data.ga4_enhannced_events_mapping);
-    }
-
-    if (data.ga4_recommended_events_enabled === true && data.ga4_recommended_events_mapping && data.ga4_recommended_events_mapping.length > 0) {
-        mappings.push(data.ga4_recommended_events_mapping);
-    }
-
-    if (data.ga4_automatic_events_enabled === true && data.ga4_automatic_events_mapping && data.ga4_automatic_events_mapping.length > 0) {
-        mappings.push(data.ga4_automatic_events_mapping);
-    }
-
-
-    if (data.data_layer_additional_mappings && data.data_layer_additional_mappings.length > 0) {
-        mappings.push(data.data_layer_additional_mappings);
-    }
-
-    const eventsMap = {};
-    for (let i = 0; i < mappings.length; i++) {
-        const currentMap = makeTableMap(mappings[i] || [], 'event_name', 'event_type');
-        copyObj(eventsMap, currentMap);
-    }
-
-    return eventsMap;
-};
-
-const copyObj = (target, source) => {
-    for (let key in source) {
-        target[key] = source[key];
-    }
-};
-
-const copyKeysFromDataLayer = (keys) => {
-    const copy = {};
-    keys.forEach((key) => {
-        const value = copyFromDataLayer(key);
-        if (value) {
-            copy[key] = value;
-        }
-    });
-
-    return copy;
-};
-
-const onfailure = () => {
-    return fail('Failed to load the Journify JavaScript library');
-};
-
-// Main
-// init data layer variables
-let dataLayerEventName = null;
-let dataLayerEventProperties = null;
-let dataLayerUserID = null;
-let dataLayerExternalIds = null;
-let dataLayerTraits = null;
-
-let dataLayerPageName = null;
-let dataLayerGroupId = null;
-
-if (data.tag_type == 'data_layer_event') {
+const initDataLayerVariables = () => {
     const eventNameKey = dataHasField('data_layer_event_name_key') ? data.data_layer_event_name_key : 'event';
     dataLayerEventName = copyFromDataLayer(eventNameKey) || copyFromDataLayer('event_name');
-    dataLayerUserID = copyFromDataLayer('user_id');
+    dataLayerUserId = copyFromDataLayer('user_id');
     dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};
 
@@ -1567,12 +1450,174 @@ if (data.tag_type == 'data_layer_event') {
     if (getType(nestedProperties) == 'object') {
         copyObj(dataLayerEventProperties, nestedProperties);
     }
+};
+
+const dataLayerIdentify = () => {
+    if (!dataLayerUserId) {
+        return fail('`user_id` is required when calling `identify`');
+    }
+
+    journifyWrapper.identify(dataLayerUserId, dataLayerTraits,  dataLayerExternalIds);
+};
+
+const dataLayerGroup = () => {
+    if (!dataLayerGroupId) {
+        return fail('`group_id` is required when calling `group`');
+    }
+
+    journifyWrapper.group(dataLayerGroupId, dataLayerTraits);
+};
+
+const dataLayerTrack = (eventName) => {
+    log(LOG_PREFIX + ' eventName', eventName);
+    journifyWrapper.track(eventName, dataLayerEventProperties, dataLayerTraits);
+};
+
+const dataLayerPage = () => {
+    if (!dataLayerPageName) {
+        dataLayerPageName = readTitle();
+    }
+
+    journifyWrapper.page(dataLayerPageName, dataLayerEventProperties, dataLayerTraits);
+};
+
+const getDataLayerMappedEvents = () => {
+    const mappings = [];
+    if (data.ga4_enhannced_events_enabled === true && data.ga4_enhannced_events_mapping && data.ga4_enhannced_events_mapping.length > 0) {
+        mappings.push(data.ga4_enhannced_events_mapping);
+    }
+
+    if (data.ga4_recommended_events_enabled === true && data.ga4_recommended_events_mapping && data.ga4_recommended_events_mapping.length > 0) {
+        mappings.push(data.ga4_recommended_events_mapping);
+    }
+
+    if (data.ga4_automatic_events_enabled === true && data.ga4_automatic_events_mapping && data.ga4_automatic_events_mapping.length > 0) {
+        mappings.push(data.ga4_automatic_events_mapping);
+    }
+
+
+    if (data.data_layer_additional_mappings && data.data_layer_additional_mappings.length > 0) {
+        mappings.push(data.data_layer_additional_mappings);
+    }
+
+    const eventsMap = {};
+    for (let i = 0; i < mappings.length; i++) {
+        const currentMap = makeTableMap(mappings[i] || [], 'event_name', 'event_type');
+        copyObj(eventsMap, currentMap);
+    }
+
+    return eventsMap;
+};
+
+const copyObj = (target, source) => {
+    for (let key in source) {
+        target[key] = source[key];
+    }
+};
+
+const copyKeysFromDataLayer = (keys) => {
+    const copy = {};
+    keys.forEach((key) => {
+        const value = copyFromDataLayer(key);
+        if (value) {
+            copy[key] = value;
+        }
+    });
+
+    return copy;
+};
+
+const onfailure = () => {
+    return fail('Failed to load the Journify JavaScript library');
+};
+
+const journifyWrapper = {
+    identify: (userId, traits, externalIds) => {
+        const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
+        if (journify) {
+            journify.identify(userId, traits, externalIds);
+        } else {
+            recordCall((journify) => journify.identify(userId, traits, externalIds));
+        }
+    },
+    group: (groupId, traits) => {
+        const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
+        if (journify) {
+            journify.group(groupId, traits);
+        } else {
+            recordCall((journify) => journify.group(groupId, traits));
+        }
+    },
+    track: (eventName, properties, traits) => {
+        const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
+        if (journify) {
+            journify.track(eventName, properties, traits);
+        } else {
+            recordCall((journify) => journify.track(eventName, properties, traits));
+        }
+    },
+    page: (pageName, properties, traits) => {
+        const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
+        if (journify) {
+            journify.page(pageName, properties, traits);
+        } else {
+            recordCall((journify) => journify.page(pageName, properties, traits));
+        }
+    },
+};
+
+const recordCall = (call) => {
+    let journifyCalls = copyFromWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY);
+    if (!journifyCalls) {
+        journifyCalls = [];
+    }
+
+    journifyCalls.push(call);
+    setInWindow(JOURNIFY_GTM_CALLS_WINDOW_KEY, journifyCalls, true);
+};
+
+// Main
+let dataLayerEventName = null;
+let dataLayerEventProperties = null;
+let dataLayerUserId = null;
+let dataLayerExternalIds = null;
+let dataLayerTraits = null;
+let dataLayerPageName = null;
+let dataLayerGroupId = null;
+
+if (data.tag_type == 'init') {
+    const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
+    const jsScriptURL = 'https://static.journify.io/@journifyio/js-sdk@'+sdkVersion+'/journifyio.min.js';
+    injectScript(jsScriptURL, init, onfailure, 'journify');
+} else {
+    switch(data.tag_type) {
+        case 'identify':
+            identify();
+            break;
+
+        case 'group':
+            group();
+            break;
+
+        case 'track':
+            track();
+            break;
+
+        case 'page':
+            page();
+            break;
+
+        case 'data_layer_event':
+            dataLayerEvent();
+            break;
+
+        default:
+            log(LOG_PREFIX + ' Unsupported tag type `'+ data.tag_type +'`, skipping');
+            break;
+    }
+
+    data.gtmOnSuccess();
 }
-
-log(LOG_PREFIX + ' Tag is fired with Event name from data layer `'+ dataLayerEventName +'` and tag_type `'+ data.tag_type +'`');
-
-// inject the Journify JavaScript SDK
-injectScript(JS_URL, onsuccess, onfailure, 'journify');
 
 
 ___WEB_PERMISSIONS___
@@ -1635,6 +1680,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "journify"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "journifyGtmCalls"
                   },
                   {
                     "type": 8,
