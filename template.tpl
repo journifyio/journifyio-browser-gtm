@@ -1116,8 +1116,6 @@ const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 const JOURNIFY_GTM_CALLS_WINDOW_KEY = 'journifyGtmCalls';
 
-log(LOG_PREFIX + " Loading JS_URL:" + JS_URL);
-
 const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'accept_time',
     'achievement_id',
@@ -1287,11 +1285,11 @@ const init = () => {
     }
 
     if (data.auto_capture_pii === true){
-        settings.options.auto_capture_pii = data.auto_capture_pii;
+        settings.options.autoCapturePII = data.auto_capture_pii;
     }
    
     if (data.enable_hashing === true){
-        settings.options.enable_hashing = true;
+        settings.options.enableHashing = true;
     }
 
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
