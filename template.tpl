@@ -138,37 +138,6 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "SIMPLE_TABLE",
-    "name": "user_traits",
-    "displayName": "User traits",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Key",
-        "name": "key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Value",
-        "name": "value",
-        "type": "TEXT"
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "identify",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "tag_type",
-        "paramValue": "track",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
     "name": "external_ids",
     "displayName": "External IDs",
     "simpleTableColumns": [
@@ -230,6 +199,37 @@ ___TEMPLATE_PARAMETERS___
       }
     ],
     "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "user_traits",
+    "displayName": "User traits",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "identify",
+        "type": "EQUALS"
+      },
       {
         "paramName": "tag_type",
         "paramValue": "track",
