@@ -159,6 +159,11 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "tag_type",
         "paramValue": "identify",
         "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
       }
     ]
   },
