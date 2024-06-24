@@ -183,11 +183,11 @@ const init = () => {
     }
 
     if (data.auto_capture_pii === true){
-        settings.options.auto_capture_pii = data.auto_capture_pii;
+        settings.options.autoCapturePII = data.auto_capture_pii;
     }
    
     if (data.enable_hashing === true){
-        settings.options.enable_hashing = true;
+        settings.options.enableHashing = true;
     }
 
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);

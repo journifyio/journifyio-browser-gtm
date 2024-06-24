@@ -138,32 +138,6 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "SIMPLE_TABLE",
-    "name": "user_traits",
-    "displayName": "User traits",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Key",
-        "name": "key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Value",
-        "name": "value",
-        "type": "TEXT"
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "identify",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
     "name": "external_ids",
     "displayName": "External IDs",
     "simpleTableColumns": [
@@ -225,6 +199,37 @@ ___TEMPLATE_PARAMETERS___
       }
     ],
     "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "user_traits",
+    "displayName": "User traits",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Key",
+        "name": "key",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Value",
+        "name": "value",
+        "type": "TEXT"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "identify",
+        "type": "EQUALS"
+      },
       {
         "paramName": "tag_type",
         "paramValue": "track",
@@ -1116,8 +1121,6 @@ const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
 const JOURNIFY_GTM_CALLS_WINDOW_KEY = 'journifyGtmCalls';
 
-log(LOG_PREFIX + " Loading JS_URL:" + JS_URL);
-
 const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'accept_time',
     'achievement_id',
@@ -1287,11 +1290,11 @@ const init = () => {
     }
 
     if (data.auto_capture_pii === true){
-        settings.options.auto_capture_pii = data.auto_capture_pii;
+        settings.options.autoCapturePII = data.auto_capture_pii;
     }
    
     if (data.enable_hashing === true){
-        settings.options.enable_hashing = true;
+        settings.options.enableHashing = true;
     }
 
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
