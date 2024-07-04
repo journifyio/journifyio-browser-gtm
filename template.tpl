@@ -234,6 +234,11 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "tag_type",
         "paramValue": "track",
         "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
       }
     ]
   },
@@ -1282,7 +1287,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-    
+
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1292,7 +1297,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-   
+
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
