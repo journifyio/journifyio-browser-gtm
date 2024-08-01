@@ -481,10 +481,6 @@ ___TEMPLATE_PARAMETERS___
             "event_type": "track"
           },
           {
-            "event_name": "page_view",
-            "event_type": "page"
-          },
-          {
             "event_name": "gtm.init",
             "event_type": "page"
           },
