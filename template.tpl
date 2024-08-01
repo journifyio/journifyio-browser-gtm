@@ -485,6 +485,10 @@ ___TEMPLATE_PARAMETERS___
             "event_type": "page"
           },
           {
+            "event_name": "gtm.init",
+            "event_type": "page"
+          },
+          {
             "event_name": "post_score",
             "event_type": "track"
           },
