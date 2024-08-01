@@ -120,6 +120,32 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
+    "name": "api_host",
+    "displayName": "API host (optional)",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "cdn_host",
+    "displayName": "Cdn host (optional)",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
     "name": "user_id",
     "displayName": "User ID",
     "simpleValueType": true,
@@ -203,6 +229,16 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "tag_type",
         "paramValue": "track",
         "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
       }
     ]
   },
@@ -238,6 +274,16 @@ ___TEMPLATE_PARAMETERS___
       {
         "paramName": "tag_type",
         "paramValue": "data_layer_event",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
         "type": "EQUALS"
       }
     ]
@@ -1002,32 +1048,6 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "TEXT",
-    "name": "api_host",
-    "displayName": "API host (optional)",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "cdn_host",
-    "displayName": "Cdn host (optional)",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
     "type": "GROUP",
     "name": "options",
     "displayName": "Additional Options",
@@ -1287,7 +1307,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-
+    
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1297,7 +1317,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-
+   
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
