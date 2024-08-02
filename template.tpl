@@ -67,19 +67,6 @@ ___TEMPLATE_PARAMETERS___
     "defaultValue": "init"
   },
   {
-    "type": "CHECKBOX",
-    "name": "track_page_view_on_init",
-    "checkboxText": "Track page view after init",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
     "type": "TEXT",
     "name": "write_key",
     "displayName": "Write Key",
@@ -232,11 +219,6 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "tag_type",
         "paramValue": "page",
         "type": "EQUALS"
       }
@@ -278,12 +260,12 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "paramName": "tag_type",
-        "paramValue": "init",
+        "paramValue": "page",
         "type": "EQUALS"
       },
       {
-        "paramName": "tag_type",
-        "paramValue": "page",
+        "paramName": "track_page_view_on_init",
+        "paramValue": true,
         "type": "EQUALS"
       }
     ]
@@ -295,8 +277,8 @@ ___TEMPLATE_PARAMETERS___
     "simpleValueType": true,
     "enablingConditions": [
       {
-        "paramName": "tag_type",
-        "paramValue": "page",
+        "paramName": "track_page_view_on_init",
+        "paramValue": true,
         "type": "EQUALS"
       }
     ]
@@ -323,6 +305,11 @@ ___TEMPLATE_PARAMETERS___
       {
         "paramName": "tag_type",
         "paramValue": "page",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "track_page_view_on_init",
+        "paramValue": true,
         "type": "EQUALS"
       }
     ]
@@ -479,6 +466,10 @@ ___TEMPLATE_PARAMETERS___
           {
             "event_name": "login",
             "event_type": "track"
+          },
+          {
+            "event_name": "page_view",
+            "event_type": "page"
           },
           {
             "event_name": "gtm.init",
@@ -1050,9 +1041,22 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "GROUP",
     "name": "options",
-    "displayName": "Additional Options",
-    "groupStyle": "ZIPPY_OPEN",
+    "displayName": "Additional Init Options",
+    "groupStyle": "ZIPPY_CLOSED",
     "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "track_page_view_on_init",
+        "checkboxText": "Track page view after init",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ]
+      },
       {
         "type": "CHECKBOX",
         "name": "enable_hashing",
@@ -1122,6 +1126,13 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "valueHint": "/jrf/renew"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
       }
     ]
   }
