@@ -284,37 +284,6 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "SIMPLE_TABLE",
-    "name": "page_properties",
-    "displayName": "Page properties",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Key",
-        "name": "key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Value",
-        "name": "value",
-        "type": "TEXT"
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "track_page_view_on_init",
-        "paramValue": true,
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
     "type": "TEXT",
     "name": "group_id",
     "displayName": "Group ID",
@@ -466,10 +435,6 @@ ___TEMPLATE_PARAMETERS___
           {
             "event_name": "login",
             "event_type": "track"
-          },
-          {
-            "event_name": "page_view",
-            "event_type": "page"
           },
           {
             "event_name": "gtm.init",
@@ -1385,7 +1350,7 @@ const page = () => {
         pageName = readTitle();
     }
 
-    const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+    const properties = makeTableMap(data.track_properties || [], 'key', 'value');
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
 
     journifyWrapper.page(pageName, properties, traits);
