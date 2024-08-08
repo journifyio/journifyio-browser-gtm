@@ -242,7 +242,7 @@ const page = () => {
         pageName = readTitle();
     }
 
-    const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+    const properties = makeTableMap(data.track_properties || [], 'key', 'value');
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
 
     journifyWrapper.page(pageName, properties, traits);

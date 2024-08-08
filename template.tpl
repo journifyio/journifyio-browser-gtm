@@ -67,19 +67,6 @@ ___TEMPLATE_PARAMETERS___
     "defaultValue": "init"
   },
   {
-    "type": "CHECKBOX",
-    "name": "track_page_view_on_init",
-    "checkboxText": "Track page view after init",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
     "type": "TEXT",
     "name": "write_key",
     "displayName": "Write Key",
@@ -110,6 +97,32 @@ ___TEMPLATE_PARAMETERS___
       }
     ],
     "defaultValue": "latest",
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "api_host",
+    "displayName": "API host (optional)",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
+    "name": "cdn_host",
+    "displayName": "Cdn host (optional)",
+    "simpleValueType": true,
     "enablingConditions": [
       {
         "paramName": "tag_type",
@@ -203,6 +216,11 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "tag_type",
         "paramValue": "track",
         "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
       }
     ]
   },
@@ -239,6 +257,16 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "tag_type",
         "paramValue": "data_layer_event",
         "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "track_page_view_on_init",
+        "paramValue": true,
+        "type": "EQUALS"
       }
     ]
   },
@@ -249,34 +277,8 @@ ___TEMPLATE_PARAMETERS___
     "simpleValueType": true,
     "enablingConditions": [
       {
-        "paramName": "tag_type",
-        "paramValue": "page",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "SIMPLE_TABLE",
-    "name": "page_properties",
-    "displayName": "Page properties",
-    "simpleTableColumns": [
-      {
-        "defaultValue": "",
-        "displayName": "Key",
-        "name": "key",
-        "type": "TEXT"
-      },
-      {
-        "defaultValue": "",
-        "displayName": "Value",
-        "name": "value",
-        "type": "TEXT"
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "page",
+        "paramName": "track_page_view_on_init",
+        "paramValue": true,
         "type": "EQUALS"
       }
     ]
@@ -435,7 +437,7 @@ ___TEMPLATE_PARAMETERS___
             "event_type": "track"
           },
           {
-            "event_name": "page_view",
+            "event_name": "gtm.init",
             "event_type": "page"
           },
           {
@@ -1002,37 +1004,24 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
-    "type": "TEXT",
-    "name": "api_host",
-    "displayName": "API host (optional)",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "cdn_host",
-    "displayName": "Cdn host (optional)",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
     "type": "GROUP",
     "name": "options",
-    "displayName": "Additional Options",
-    "groupStyle": "ZIPPY_OPEN",
+    "displayName": "Additional Init Options",
+    "groupStyle": "ZIPPY_CLOSED",
     "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "track_page_view_on_init",
+        "checkboxText": "Track page view after init",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ]
+      },
       {
         "type": "CHECKBOX",
         "name": "enable_hashing",
@@ -1102,6 +1091,13 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "valueHint": "/jrf/renew"
+      }
+    ],
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
       }
     ]
   }
@@ -1287,7 +1283,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-
+    
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1297,7 +1293,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-
+   
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
@@ -1354,7 +1350,7 @@ const page = () => {
         pageName = readTitle();
     }
 
-    const properties = makeTableMap(data.page_properties || [], 'key', 'value');
+    const properties = makeTableMap(data.track_properties || [], 'key', 'value');
     const traits = makeTableMap(data.user_traits || [], 'key', 'value');
 
     journifyWrapper.page(pageName, properties, traits);
