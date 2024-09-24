@@ -1053,7 +1053,14 @@ ___TEMPLATE_PARAMETERS___
         "type": "TEXT",
         "name": "auto_capture_phone_regex",
         "displayName": "Auto capture phone regex",
-        "simpleValueType": true
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "auto_capture_pii",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ]
       },
       {
         "type": "TEXT",
@@ -1268,13 +1275,6 @@ const init = () => {
         options: {}
     };
 
-    if (dataHasField('phone_country_code')) {
-        settings.phoneCountryCode = data.phone_country_code;
-    }
-
-    if (dataHasField('auto_capture_phone_regex')) {
-        settings.autoCapturePhoneRegex = data.auto_capture_phone_regex;
-    }
 
     if (dataHasField('api_host')) {
         settings.apiHost = data.api_host;
@@ -1309,6 +1309,14 @@ const init = () => {
 
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
+    }
+
+    if (dataHasField('phone_country_code')) {
+        settings.options.phoneCountryCode = data.phone_country_code;
+    }
+
+    if (dataHasField('auto_capture_phone_regex')) {
+        settings.options.autoCapturePhoneRegex = data.auto_capture_phone_regex;
     }
 
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
