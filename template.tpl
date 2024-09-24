@@ -1275,7 +1275,6 @@ const init = () => {
         options: {}
     };
 
-
     if (dataHasField('api_host')) {
         settings.apiHost = data.api_host;
     }
