@@ -190,6 +190,14 @@ const init = () => {
         settings.options.enableHashing = true;
     }
 
+    if (dataHasField('phone_country_code')) {
+        settings.options.phoneCountryCode = data.phone_country_code;
+    }
+
+    if (dataHasField('auto_capture_phone_regex')) {
+        settings.options.autoCapturePhoneRegex = data.auto_capture_phone_regex;
+    }
+
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
 
     journify.load(settings);

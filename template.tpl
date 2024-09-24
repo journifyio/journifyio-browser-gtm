@@ -1,11 +1,4 @@
-﻿___TERMS_OF_SERVICE___
-
-By creating or modifying this file you agree to Google Tag Manager's Community
-Template Gallery Developer Terms of Service available at
-https://developers.google.com/tag-manager/gallery-tos (or such other URL as
-Google may provide), as modified from time to time.
-
-___INFO___
+﻿___INFO___
 
 {
   "type": "TAG",
@@ -1037,6 +1030,12 @@ ___TEMPLATE_PARAMETERS___
         "help": "Enabling this option will hash all first-party data on the client side."
       },
       {
+        "type": "TEXT",
+        "name": "phone_country_code",
+        "displayName": "Phone ISO 3166 country code (e.g: SA, AE)",
+        "simpleValueType": true
+      },
+      {
         "type": "CHECKBOX",
         "name": "auto_capture_pii",
         "checkboxText": "Auto Capture PII",
@@ -1049,6 +1048,19 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "help": "Enabling this option will automatically capture PII on any page."
+      },
+      {
+        "type": "TEXT",
+        "name": "auto_capture_phone_regex",
+        "displayName": "Auto capture phone regex",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "auto_capture_pii",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ]
       },
       {
         "type": "TEXT",
@@ -1283,7 +1295,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-    
+
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1293,9 +1305,17 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-   
+
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
+    }
+
+    if (dataHasField('phone_country_code')) {
+        settings.options.phoneCountryCode = data.phone_country_code;
+    }
+
+    if (dataHasField('auto_capture_phone_regex')) {
+        settings.options.autoCapturePhoneRegex = data.auto_capture_phone_regex;
     }
 
     log(LOG_PREFIX + 'Initializing Journify SDK with settings: ', settings);
