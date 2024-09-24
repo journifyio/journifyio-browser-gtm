@@ -1032,7 +1032,7 @@ ___TEMPLATE_PARAMETERS___
       {
         "type": "TEXT",
         "name": "phone_country_code",
-        "displayName": "Phone ISO 3166 country code (e.g: SA, AE)",
+        "displayName": "Phone country code (without the + sign)",
         "simpleValueType": true
       },
       {
