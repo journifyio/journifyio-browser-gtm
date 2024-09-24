@@ -155,6 +155,14 @@ const init = () => {
         options: {}
     };
 
+    if (dataHasField('phone_country_code')) {
+        settings.phoneCountryCode = data.phone_country_code;
+    }
+
+    if (dataHasField('auto_capture_phone_regex')) {
+        settings.autoCapturePhoneRegex = data.auto_capture_phone_regex;
+    }
+
     if (dataHasField('api_host')) {
         settings.apiHost = data.api_host;
     }
