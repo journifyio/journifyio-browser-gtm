@@ -505,9 +505,9 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'init') {
-    const sdkCdnHost = data.sdk_cdn_host || DEFAULT_SDK_CDN_HOST;
+    const sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
-    const jsScriptURL = 'https://'+ sdkCdnHost +'/@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js';
+    const jsScriptURL = sdkCDNHost +'/@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js';
     injectScript(jsScriptURL, init, onfailure, 'journify');
 } else {
     switch(data.tag_type) {

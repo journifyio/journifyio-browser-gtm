@@ -80,26 +80,6 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "sdk_cdn_host",
-    "displayName": "Journify SDK CDN",
-    "simpleValueType": true,
-    "notSetText": "SDK CDN is required",
-    "valueValidators": [
-      {
-        "type": "NON_EMPTY"
-      }
-    ],
-    "defaultValue": "static.journify.io",
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
     "name": "sdk_version",
     "displayName": "Journify SDK version",
     "simpleValueType": true,
@@ -134,7 +114,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "cdn_host",
-    "displayName": "Cdn host (optional)",
+    "displayName": "CDN host",
     "simpleValueType": true,
     "enablingConditions": [
       {
@@ -142,7 +122,8 @@ ___TEMPLATE_PARAMETERS___
         "paramValue": "init",
         "type": "EQUALS"
       }
-    ]
+    ],
+    "defaultValue": "https://static.journify.io"
   },
   {
     "type": "TEXT",
@@ -1645,9 +1626,9 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'init') {
-    const sdkCdnHost = data.sdk_cdn_host || DEFAULT_SDK_CDN_HOST;
+    const sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
-    const jsScriptURL = 'https://'+ sdkCdnHost +'/@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js';
+    const jsScriptURL = sdkCDNHost +'/@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js';
     injectScript(jsScriptURL, init, onfailure, 'journify');
 } else {
     switch(data.tag_type) {
@@ -1872,5 +1853,3 @@ scenarios: []
 ___NOTES___
 
 Created on 3/28/2023, 1:47:47 PM
-
-
