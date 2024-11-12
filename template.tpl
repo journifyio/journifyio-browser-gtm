@@ -80,6 +80,26 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
+    "name": "sdk_cdn_host",
+    "displayName": "Journify SDK CDN",
+    "simpleValueType": true,
+    "notSetText": "SDK CDN is required",
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      }
+    ],
+    "defaultValue": "static.journify.io",
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "TEXT",
     "name": "sdk_version",
     "displayName": "Journify SDK version",
     "simpleValueType": true,
@@ -1129,6 +1149,7 @@ const getType = require('getType');
 const readTitle = require('readTitle');
 
 // constants
+const DEFAULT_SDK_CDN_HOST = 'static.journify.io';
 const DEFAULT_SDK_VERSION = 'latest';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
@@ -1295,7 +1316,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-
+    
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1305,7 +1326,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-
+   
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
@@ -1624,8 +1645,9 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'init') {
+    const sdkCdnHost = data.sdk_cdn_host || DEFAULT_SDK_CDN_HOST;
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
-    const jsScriptURL = 'https://static.journify.io/@journifyio/js-sdk@'+sdkVersion+'/journifyio.min.js';
+    const jsScriptURL = 'https://'+ sdkCdnHost +'/@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js';
     injectScript(jsScriptURL, init, onfailure, 'journify');
 } else {
     switch(data.tag_type) {
@@ -1796,7 +1818,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://static.journify.io/@journifyio/js-sdk@*"
+                "string": "https://cdn.jrnf.jarir.com/@journifyio/js-sdk@*"
               }
             ]
           }
