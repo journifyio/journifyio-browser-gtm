@@ -1799,7 +1799,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://cdn.jrnf.jarir.com/@journifyio/js-sdk@*"
+                "string": "https://static.journify.io/@journifyio/js-sdk@*"
               }
             ]
           }
