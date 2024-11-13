@@ -114,7 +114,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "cdn_host",
-    "displayName": "Cdn host (optional)",
+    "displayName": "CDN host",
     "simpleValueType": true,
     "enablingConditions": [
       {
@@ -122,7 +122,8 @@ ___TEMPLATE_PARAMETERS___
         "paramValue": "init",
         "type": "EQUALS"
       }
-    ]
+    ],
+    "defaultValue": "https://static.journify.io"
   },
   {
     "type": "TEXT",
@@ -1129,6 +1130,7 @@ const getType = require('getType');
 const readTitle = require('readTitle');
 
 // constants
+const DEFAULT_SDK_CDN_HOST = 'static.journify.io';
 const DEFAULT_SDK_VERSION = 'latest';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
@@ -1295,7 +1297,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-
+    
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1305,7 +1307,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-
+   
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
@@ -1624,8 +1626,9 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'init') {
+    const sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
-    const jsScriptURL = 'https://static.journify.io/@journifyio/js-sdk@'+sdkVersion+'/journifyio.min.js';
+    const jsScriptURL = sdkCDNHost +'/@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js';
     injectScript(jsScriptURL, init, onfailure, 'journify');
 } else {
     switch(data.tag_type) {
@@ -1850,5 +1853,3 @@ scenarios: []
 ___NOTES___
 
 Created on 3/28/2023, 1:47:47 PM
-
-
