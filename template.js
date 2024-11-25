@@ -7,6 +7,7 @@ const setInWindow = require('setInWindow');
 const copyFromDataLayer = require('copyFromDataLayer');
 const getType = require('getType');
 const readTitle = require('readTitle');
+const encodeUri = require('encodeUri');
 
 // constants
 const DEFAULT_SDK_CDN_HOST = 'static.journify.io';
@@ -507,7 +508,7 @@ let dataLayerGroupId = null;
 if (data.tag_type == 'init') {
     const sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
-    const jsScriptURL = sdkCDNHost +'/@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js';
+    const jsScriptURL = sdkCDNHost +'/' + encodeUri('@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js');
     injectScript(jsScriptURL, init, onfailure, 'journify');
 } else {
     switch(data.tag_type) {

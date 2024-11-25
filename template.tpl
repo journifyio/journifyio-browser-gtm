@@ -1,4 +1,12 @@
-﻿___INFO___
+﻿___TERMS_OF_SERVICE___
+
+By creating or modifying this file you agree to Google Tag Manager's Community
+Template Gallery Developer Terms of Service available at
+https://developers.google.com/tag-manager/gallery-tos (or such other URL as
+Google may provide), as modified from time to time.
+
+
+___INFO___
 
 {
   "type": "TAG",
@@ -1128,6 +1136,7 @@ const setInWindow = require('setInWindow');
 const copyFromDataLayer = require('copyFromDataLayer');
 const getType = require('getType');
 const readTitle = require('readTitle');
+const encodeUri = require('encodeUri');
 
 // constants
 const DEFAULT_SDK_CDN_HOST = 'static.journify.io';
@@ -1297,7 +1306,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-    
+
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1307,7 +1316,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-   
+
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
@@ -1628,7 +1637,7 @@ let dataLayerGroupId = null;
 if (data.tag_type == 'init') {
     const sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
-    const jsScriptURL = sdkCDNHost +'/@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js';
+    const jsScriptURL = sdkCDNHost +'/' + encodeUri('@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js');
     injectScript(jsScriptURL, init, onfailure, 'journify');
 } else {
     switch(data.tag_type) {
@@ -1799,7 +1808,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://static.journify.io/@journifyio/js-sdk@*"
+                "string": "https://static.journify.dev/@journifyio/js-sdk@*"
               }
             ]
           }
@@ -1853,3 +1862,5 @@ scenarios: []
 ___NOTES___
 
 Created on 3/28/2023, 1:47:47 PM
+
+
