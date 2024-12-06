@@ -27,7 +27,7 @@ jobs:
 
       - name: Update YAML File
         run: |
-          new_entry="- sha: $hash\n  changeNotes: |2\n      $pr_title"
+          new_entry="  - sha: $hash\n  changeNotes: |2\n      $pr_title"
           sed -i "/# Latest version/a\\$new_entry" metadata.yaml
 
       # Step 5: Commit and push changes
