@@ -23,9 +23,9 @@ jobs:
           echo "Changed files: $changed_files"
           if ! echo "$changed_files" | grep -q "^template.tpl$"; then
             echo "template.tpl was not modified. Skipping workflow."
-            echo "template_tpl_changed=true" >> $GITHUB_ENV
-          else
             echo "template_tpl_changed=false" >> $GITHUB_ENV
+          else
+            echo "template_tpl_changed=true" >> $GITHUB_ENV
           fi
 
       - name: Get PR Title
