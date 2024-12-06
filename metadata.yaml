@@ -2,6 +2,9 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
+  - sha: 36e5968ce3767151f21ac67ce87d3e377821a3ea
+  changeNotes: |2
+      pr title example
   - sha: 6b0c563de8fd53e899833118540d9aa909af8f82
     changeNotes: |2
         pr title example
