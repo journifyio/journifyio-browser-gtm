@@ -1,0 +1,52 @@
+name: Update YAML on Merge to Main
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  update-yaml:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Get the latest commit hash
+      - name: Get Latest Commit Hash
+        id: get_commit
+        run: echo "hash=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      # Step 3: Get the PR Title
+      - name: Get PR Title
+        id: get_pr_title
+        run: |
+          pr_title="pr title example"
+          echo "pr_title=${pr_title}" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 4: Update YAML file
+      - name: Update YAML File
+        run: |
+          # Get current date
+          date=$(date "+%Y-%m-%d")
+
+          # Prepare new YAML entry
+          new_entry="- sha: $hash\n  changeNotes: |2\n      $pr_title"
+
+          # Insert new entry under # Latest version
+          sed -i "/# Latest version/a\\$new_entry" metadata.yaml
+
+      # Step 5: Commit and push changes
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add metadata.yaml
+          git commit -m "Update YAML with latest commit and PR title"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
