@@ -17,16 +17,20 @@ jobs:
         id: get_commit
         run: echo "hash=$(git rev-parse HEAD)" >> $GITHUB_ENV
       - name: Check Modified Files
+        id: check_files
         run: |
           changed_files=$(git diff-tree --no-commit-id --name-only -r $hash)
           echo "Changed files: $changed_files"
           if ! echo "$changed_files" | grep -q "^template.tpl$"; then
             echo "template.tpl was not modified. Skipping workflow."
-            exit 0
+            echo "template_tpl_changed=true" >> $GITHUB_ENV
+          else
+            echo "template_tpl_changed=false" >> $GITHUB_ENV
           fi
 
       - name: Get PR Title
         id: get_pr_title
+        if: env.template_tpl_changed == 'true'
         run: |
           pr_title=$(gh pr view --json title -q '.title')
           echo "pr_title=${pr_title}" >> $GITHUB_ENV
@@ -34,12 +38,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update YAML File
+        if: env.template_tpl_changed == 'true'
         run: |
-          new_entry="  - sha: $hash\n  changeNotes: |2\n      $pr_title"
+          new_entry="  - sha: $hash\n    changeNotes: |2\n      $pr_title"
           sed -i "/# Latest version/a\\$new_entry" metadata.yaml
 
       # Step 5: Commit and push changes
       - name: Commit and Push Changes
+        if: env.template_tpl_changed == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
