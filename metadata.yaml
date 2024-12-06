@@ -2,9 +2,6 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
-  - sha: fac8f70efb75d3547fe2a54b8e8c98bc851739b3
-  changeNotes: |2
-      Automatic deployment of gtm
   - sha: c562fe2373b05d65178c8d90209ae5f799b168ae
     changeNotes: |2
       Use static.journify.io CDN.
