@@ -16,11 +16,19 @@ jobs:
       - name: Get Latest Commit Hash
         id: get_commit
         run: echo "hash=$(git rev-parse HEAD)" >> $GITHUB_ENV
+      - name: Check Modified Files
+        run: |
+          changed_files=$(git diff-tree --no-commit-id --name-only -r $hash)
+          echo "Changed files: $changed_files"
+          if ! echo "$changed_files" | grep -q "^template.tpl$"; then
+            echo "template.tpl was not modified. Skipping workflow."
+            exit 0
+          fi
 
       - name: Get PR Title
         id: get_pr_title
         run: |
-          pr_title="pr title example"
+          pr_title=$(gh pr view --json title -q '.title')
           echo "pr_title=${pr_title}" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

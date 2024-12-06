@@ -2,17 +2,12 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
-  - sha: 6b0c563de8fd53e899833118540d9aa909af8f82
-    changeNotes: |2
-        pr title example
-  - sha: 23d87f404b0e5decc4e0496e24403af27addacee
-    changeNotes: |2
-        pr title example
   - sha: c562fe2373b05d65178c8d90209ae5f799b168ae
     changeNotes: |2
       Use static.journify.io CDN.
       Include more Google recommended properties.
       Make CDN URL configurable.
       Unify CDN URL configuration (sdk and write key settings).
+  # Older versions
   - sha: 3868db8ed8c9177200b546aa1e2cff51f4170a82
     changeNotes: Initial release
