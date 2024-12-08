@@ -56,7 +56,7 @@ jobs:
         if: env.template_tpl_changed == 'true'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Update metadata.yaml with latest commit and PR title"
+          commit-message: "Update metadata.yaml with latest changes from ${{ env.old_branch }}"
           branch: update-yaml-version
           delete-branch: true
           body: |
