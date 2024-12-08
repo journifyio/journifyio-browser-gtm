@@ -19,12 +19,13 @@ jobs:
 
       - name: Get Previous Commit
         id: get_previous_commit
-        run: echo "previous_hash=$(git rev-parse HEAD^1)" >> $GITHUB_ENV
+        run: echo "previous_hash=$(git rev-parse $hash^2)" >> $GITHUB_ENV
 
       - name: Check Modified Files
         id: check_files
         run: |
           changed_files=$(git diff --name-only ${{ env.previous_hash }} ${{ env.hash }})
+          echo "previous_hash: ${{ env.previous_hash }}"
           echo "Changed files: $changed_files"
           if ! echo "$changed_files" | grep -q "^template.tpl$"; then
             echo "template.tpl was not modified. Skipping workflow."
