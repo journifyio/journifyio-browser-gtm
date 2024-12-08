@@ -17,16 +17,14 @@ jobs:
         id: get_commit
         run: echo "hash=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
-      - name: Get Old Branch Name
-        id: get_branch_name
-        run: |
-          branch_name=$(git log -1 --pretty=%D | grep -oE 'origin/[^,]+' | head -n 1 | sed 's/origin\///')
-          echo "old_branch=$branch_name" >> $GITHUB_ENV
+      - name: Get Previous Commit
+        id: get_previous_commit
+        run: echo "previous_hash=$(git rev-parse HEAD^1)" >> $GITHUB_ENV
 
       - name: Check Modified Files
         id: check_files
         run: |
-          changed_files=$(git diff-tree --no-commit-id --name-only -r $hash)
+          changed_files=$(git diff --name-only ${{ env.previous_hash }} ${{ env.hash }})
           echo "Changed files: $changed_files"
           if ! echo "$changed_files" | grep -q "^template.tpl$"; then
             echo "template.tpl was not modified. Skipping workflow."
@@ -34,6 +32,13 @@ jobs:
           else
             echo "template_tpl_changed=true" >> $GITHUB_ENV
           fi
+
+      - name: Get Old Branch Name
+        id: get_branch_name
+        if: env.template_tpl_changed == 'true'
+        run: |
+          branch_name=$(git log -1 --pretty=%D | grep -oE 'origin/[^,]+' | head -n 1 | sed 's/origin\///')
+          echo "old_branch=$branch_name" >> $GITHUB_ENV
 
       - name: Get PR Title
         id: get_pr_title
