@@ -19,7 +19,7 @@ jobs:
 
       - name: Get Previous Commit
         id: get_previous_commit
-        run: echo "previous_hash=$(git rev-parse ${{ env.hash }}^2)" >> $GITHUB_ENV
+        run: echo "previous_hash=$(git rev-parse $hash^2)" >> $GITHUB_ENV
 
       - name: Check Modified Files
         id: check_files
