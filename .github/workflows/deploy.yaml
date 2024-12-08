@@ -19,7 +19,6 @@ jobs:
         id: check_files
         run: |
           changed_files=$(git diff --name-only ${{ github.event.before }})
-          echo "previous_hash: ${{ github.event.before }}"
           echo "Changed files: $changed_files"
           if ! echo "$changed_files" | grep -q "^template.tpl$"; then
             echo "template.tpl was not modified. Skipping workflow."
