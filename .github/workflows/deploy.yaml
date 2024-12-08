@@ -12,11 +12,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Check Modified Files
         id: check_files
         run: |
-          changed_files=$(git diff --name-only ${{ github.event.before }})
+          changed_files=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.before }})
           echo "previous_hash: ${{ github.event.before }}"
           echo "Changed files: $changed_files"
           if ! echo "$changed_files" | grep -q "^template.tpl$"; then
