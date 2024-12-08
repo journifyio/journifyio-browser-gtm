@@ -1,0 +1,79 @@
+name: Update YAML on Merge to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-deployment-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Get Latest Commit Hash
+        id: get_commit
+        run: echo "hash=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Get Old Branch Name
+        id: get_branch_name
+        run: |
+          branch_name=$(git log -1 --pretty=%D | grep -oE 'origin/[^,]+' | head -n 1 | sed 's/origin\///')
+          echo "old_branch=$branch_name" >> $GITHUB_ENV
+
+      - name: Check Modified Files
+        id: check_files
+        run: |
+          changed_files=$(git diff-tree --no-commit-id --name-only -r $hash)
+          echo "Changed files: $changed_files"
+          if ! echo "$changed_files" | grep -q "^template.tpl$"; then
+            echo "template.tpl was not modified. Skipping workflow."
+            echo "template_tpl_changed=false" >> $GITHUB_ENV
+          else
+            echo "template_tpl_changed=true" >> $GITHUB_ENV
+          fi
+
+      - name: Get PR Title
+        id: get_pr_title
+        if: env.template_tpl_changed == 'true'
+        run: |
+          pr_title=$(gh pr view --json title -q '.title')
+          echo "pr_title=${pr_title}" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update YAML File
+        if: env.template_tpl_changed == 'true'
+        run: |
+          new_entry="  - sha: $hash\n    changeNotes: |2\n      $pr_title"
+          sed -i "/# Latest version/a\\$new_entry" metadata.yaml
+
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v5
+        if: env.template_tpl_changed == 'true'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update metadata.yaml with latest changes from ${{ env.old_branch }}"
+          branch: update-yaml-version
+          delete-branch: true
+          body: |
+            This pull request updates the YAML file with the latest commit hash and the pull request title.
+          title: "Deploy changes from ${{ env.old_branch }} to the gallery"
+          base: main
+          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+
+#      - name: Slack notification - Deployed
+#        uses: slackapi/slack-github-action@v1.23.0
+#        if: env.template_tpl_changed == 'true'
+#        with:
+#          channel-id: 'C03KN9Q2S7P'
+#          payload: |
+#            {
+#              "text": "*journifyio-browser-gtm repository * :wave: A Pull Request has been created to deploy changes from ${{ env.old_branch }} on the GTM template to the gallery: ${{ steps.create_pr.outputs.pull-request-url }}"
+#            }
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
