@@ -13,19 +13,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Get Latest Commit Hash
-        id: get_commit
-        run: echo "hash=$(git rev-parse HEAD)" >> $GITHUB_ENV
-
-      - name: Get Previous Commit
-        id: get_previous_commit
-        run: echo "previous_hash=$(git rev-parse $hash^2)" >> $GITHUB_ENV
-
       - name: Check Modified Files
         id: check_files
         run: |
-          changed_files=$(git diff --name-only ${{ env.previous_hash }} ${{ env.hash }})
-          echo "previous_hash: ${{ env.previous_hash }}"
+          changed_files=$(git diff --name-only ${{ github.event.before }})
+          echo "previous_hash: ${{ github.event.before }}"
           echo "Changed files: $changed_files"
           if ! echo "$changed_files" | grep -q "^template.tpl$"; then
             echo "template.tpl was not modified. Skipping workflow."
@@ -53,7 +45,7 @@ jobs:
       - name: Update YAML File
         if: env.template_tpl_changed == 'true'
         run: |
-          new_entry="  - sha: $hash\n    changeNotes: |2\n      $pr_title"
+          new_entry="  - sha: ${{ github.event.head }}\n    changeNotes: |2\n      $pr_title"
           sed -i "/# Latest version/a\\$new_entry" metadata.yaml
 
       - name: Create Pull Request
