@@ -39,24 +39,24 @@ jobs:
         if: env.template_tpl_changed == 'true'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Update metadata.yaml with latest changes from ${{ github.event.pull_request.head.ref }}"
+          commit-message: "Update metadata.yaml with latest changes from `${{ github.event.pull_request.head.ref }}` branch"
           branch: update-yaml-version
           delete-branch: true
           body: |
-            This pull request updates the YAML file with the latest commit hash and the pull request title.
-          title: "Deploy changes from ${{ github.event.pull_request.head.ref }} to the gallery"
+            This pull request updates the YAML file with the latest commit hash and the pull request title from the `${{ github.event.pull_request.head.ref }}` branch.
+          title: "Deploy changes from `${{ github.event.pull_request.head.ref }}` branch to the GTM gallery"
           base: main
           author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
 
-#      - name: Slack notification - Deployed
-#        uses: slackapi/slack-github-action@v1.23.0
-#        if: env.template_tpl_changed == 'true'
-#        with:
-#          channel-id: 'C03KN9Q2S7P'
-#          payload: |
-#            {
-#              "text": "*journifyio-browser-gtm repository * :wave: A Pull Request has been created to deploy changes from ${{ github.event.pull_request.head.ref }} on the GTM template to the gallery: ${{ steps.create_pr.outputs.pull-request-url }}"
-#            }
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Slack notification - Deployed
+        uses: slackapi/slack-github-action@v1.23.0
+        if: env.template_tpl_changed == 'true'
+        with:
+          channel-id: 'C03KN9Q2S7P'
+          payload: |
+            {
+              "text": "*journifyio-browser-gtm repository* :wave: A Pull Request has been created to deploy changes from the branch `${{ github.event.pull_request.head.ref }}` on to the GTM browser templates gallery: ${{ steps.create_pr.outputs.pull-request-url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
