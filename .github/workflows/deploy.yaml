@@ -1,24 +1,24 @@
 name: Update YAML on Merge to Main
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: [main]
+    types: [closed]
 
 jobs:
-  create-deployment-pr:
+  create-deployment-pr-if-merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Check Modified Files
         id: check_files
         run: |
-          changed_files=$(git diff --name-only ${{ github.event.before }})
+          changed_files=$(git diff --name-only HEAD^1 HEAD)
           echo "Changed files: $changed_files"
           if ! echo "$changed_files" | grep -q "^template.tpl$"; then
             echo "template.tpl was not modified. Skipping workflow."
@@ -27,26 +27,10 @@ jobs:
             echo "template_tpl_changed=true" >> $GITHUB_ENV
           fi
 
-      - name: Get Old Branch Name
-        id: get_branch_name
-        if: env.template_tpl_changed == 'true'
-        run: |
-          branch_name=$(git log -1 --pretty=%D | grep -oE 'origin/[^,]+' | head -n 1 | sed 's/origin\///')
-          echo "old_branch=$branch_name" >> $GITHUB_ENV
-
-      - name: Get PR Title
-        id: get_pr_title
-        if: env.template_tpl_changed == 'true'
-        run: |
-          pr_title=$(gh pr view --json title -q '.title')
-          echo "pr_title=${pr_title}" >> $GITHUB_ENV
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Update YAML File
         if: env.template_tpl_changed == 'true'
         run: |
-          new_entry="  - sha: ${{ github.event.head }}\n    changeNotes: |2\n      $pr_title"
+          new_entry="  - sha: ${{ github.event.pull_request.merge_commit_sha }}\n    changeNotes: |2\n      ${{ github.event.pull_request.title }}"
           sed -i "/# Latest version/a\\$new_entry" metadata.yaml
 
       - name: Create Pull Request
@@ -55,12 +39,12 @@ jobs:
         if: env.template_tpl_changed == 'true'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Update metadata.yaml with latest changes from ${{ env.old_branch }}"
+          commit-message: "Update metadata.yaml with latest changes from ${{ github.event.pull_request.head.ref }}"
           branch: update-yaml-version
           delete-branch: true
           body: |
             This pull request updates the YAML file with the latest commit hash and the pull request title.
-          title: "Deploy changes from ${{ env.old_branch }} to the gallery"
+          title: "Deploy changes from ${{ github.event.pull_request.head.ref }} to the gallery"
           base: main
           author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
@@ -72,7 +56,7 @@ jobs:
 #          channel-id: 'C03KN9Q2S7P'
 #          payload: |
 #            {
-#              "text": "*journifyio-browser-gtm repository * :wave: A Pull Request has been created to deploy changes from ${{ env.old_branch }} on the GTM template to the gallery: ${{ steps.create_pr.outputs.pull-request-url }}"
+#              "text": "*journifyio-browser-gtm repository * :wave: A Pull Request has been created to deploy changes from ${{ github.event.pull_request.head.ref }} on the GTM template to the gallery: ${{ steps.create_pr.outputs.pull-request-url }}"
 #            }
 #        env:
 #          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
