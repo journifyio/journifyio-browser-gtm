@@ -1291,9 +1291,7 @@ const init = () => {
     }
 
     if (dataHasField('cookie_domain')) {
-        settings.options.cookie = {
-            domain: data.cookie_domain
-        };
+        settings.options.cookie = { domain: data.cookie_domain };
     }
 
     if (dataHasField('session_duration_min')){
