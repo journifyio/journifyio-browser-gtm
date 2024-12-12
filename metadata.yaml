@@ -2,6 +2,9 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
+  - sha: f2aef3c58cea21e0a4e7ab1ad8db957b1cf7943d
+    changeNotes: |2
+      Add team to slack notification
   - sha: c562fe2373b05d65178c8d90209ae5f799b168ae
     changeNotes: |2
       Use static.journify.io CDN.
