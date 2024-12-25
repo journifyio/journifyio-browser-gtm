@@ -142,6 +142,9 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
 // helpers
 
 function isSafari(ua) {
+    if (!ua) {
+        return false;
+    }
     return ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1;
 }
 

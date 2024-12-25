@@ -1294,6 +1294,9 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
 // helpers
 
 function isSafari(ua) {
+    if (!ua) {
+        return false;
+    }
     return ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1;
 }
 
@@ -1331,7 +1334,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-
+    
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1341,7 +1344,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-
+   
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
