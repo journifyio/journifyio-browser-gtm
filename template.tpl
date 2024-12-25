@@ -135,20 +135,6 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
-    "name": "cookie_keeper_host",
-    "displayName": "Cookie Keeper host",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "tag_type",
-        "paramValue": "init",
-        "type": "EQUALS"
-      }
-    ],
-    "defaultValue": "https://ck.journify.io"
-  },
-  {
-    "type": "TEXT",
     "name": "user_id",
     "displayName": "User ID",
     "simpleValueType": true,
@@ -1117,7 +1103,7 @@ ___TEMPLATE_PARAMETERS___
         "simpleValueType": true,
         "help": "For setup instructions, refer to the documentation: https://docs.journify.io/tracking/first-party-tracking#server-setup",
         "canBeEmptyString": true,
-        "displayName": "HTTP Cookie Service Renew Endpoint (optional)",
+        "displayName": "HTTP Cookie Self-Service Renew Endpoint (optional)",
         "enablingConditions": [
           {
             "paramName": "tag_type",
@@ -1126,6 +1112,22 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "valueHint": "/jrf/renew"
+      },
+      {
+        "type": "TEXT",
+        "name": "cookie_keeper_host",
+        "displayName": "Cookie Keeper host",
+        "simpleValueType": true,
+        "canBeEmptyString": true,
+        "help": "Cloudflare's Cookie Keeper Worker Subdmain (optional)",
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ],
+        "valueHint": "https://ck.journify.io"
       },
       {
         "type": "TEXT",
@@ -1329,7 +1331,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-    
+
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1339,7 +1341,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-   
+
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
