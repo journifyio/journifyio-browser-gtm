@@ -512,8 +512,7 @@ let dataLayerGroupId = null;
 if (data.tag_type == 'init') {
     let sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
     if(data.cookie_keeper_host && isSafari(data.user_agent)){
-        sdkCDNHost = data.cookie_keeper_host
-        log(LOG_PREFIX + ' Safari detected and CDN Host have been overriden with', sdkCDNHost);
+        sdkCDNHost = data.cookie_keeper_host;
     }
 
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
