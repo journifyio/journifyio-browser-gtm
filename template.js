@@ -141,6 +141,10 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
 
 // helpers
 
+function isSafari(ua) {
+    return ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1;
+}
+
 const fail = msg => {
     log(LOG_PREFIX + 'Error: ' + msg);
     return data.gtmOnFailure();
@@ -506,7 +510,12 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'init') {
-    const sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
+    let sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
+    if(data.cookie_keeper_host && isSafari(data.user_agent)){
+        sdkCDNHost = data.cookie_keeper_host
+        log(LOG_PREFIX + ' Safari detected and CDN Host have been overriden with', sdkCDNHost);
+    }
+
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
     const jsScriptURL = sdkCDNHost +'/' + encodeUri('@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js');
     injectScript(jsScriptURL, init, onfailure, 'journify');

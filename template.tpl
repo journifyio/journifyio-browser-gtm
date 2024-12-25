@@ -135,6 +135,20 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
+    "name": "cookie_keeper_host",
+    "displayName": "Cookie Keeper host",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ],
+    "defaultValue": "https://ck.journify.io"
+  },
+  {
+    "type": "TEXT",
     "name": "user_id",
     "displayName": "User ID",
     "simpleValueType": true,
@@ -1112,6 +1126,13 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "valueHint": "/jrf/renew"
+      },
+      {
+        "type": "TEXT",
+        "name": "user_agent",
+        "displayName": "User Agent",
+        "simpleValueType": true,
+        "defaultValue": "{{journify_user_agent}}"
       }
     ],
     "enablingConditions": [
