@@ -1118,23 +1118,23 @@ ___TEMPLATE_PARAMETERS___
         "name": "cookie_keeper_host",
         "displayName": "Cookie Keeper host",
         "simpleValueType": true,
-        "canBeEmptyString": true,
-        "help": "Cloudflare's Cookie Keeper Worker Subdmain (optional)",
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "init",
-            "type": "EQUALS"
-          }
-        ],
-        "valueHint": "https://ck.journify.io"
+        "canBeEmptyString": false,
+        "help": "",
+        "valueHint": "https://ck.yourdomain.com"
       },
       {
         "type": "TEXT",
         "name": "user_agent",
         "displayName": "User Agent",
         "simpleValueType": true,
-        "defaultValue": "{{journify_user_agent}}"
+        "valueHint": "{{journify_user_agent}}",
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ]
       }
     ],
     "enablingConditions": [
@@ -1321,7 +1321,9 @@ const init = () => {
     }
 
     if (dataHasField('cookie_domain')) {
-        settings.options.cookie = { domain: data.cookie_domain };
+        settings.options.cookie = {
+            domain: data.cookie_domain,
+        };
     }
 
     if (dataHasField('session_duration_min')){
@@ -1840,7 +1842,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://static.journify.io/@journifyio/js-sdk@*"
+                "string": "https://*.journify.io/*"
               }
             ]
           }
