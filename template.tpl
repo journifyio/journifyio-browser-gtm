@@ -1103,7 +1103,7 @@ ___TEMPLATE_PARAMETERS___
         "simpleValueType": true,
         "help": "For setup instructions, refer to the documentation: https://docs.journify.io/tracking/first-party-tracking#server-setup",
         "canBeEmptyString": true,
-        "displayName": "HTTP Cookie Service Renew Endpoint (optional)",
+        "displayName": "HTTP Cookie Self-Service Renew Endpoint (optional)",
         "enablingConditions": [
           {
             "paramName": "tag_type",
@@ -1112,6 +1112,29 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "valueHint": "/jrf/renew"
+      },
+      {
+        "type": "TEXT",
+        "name": "cookie_keeper_host",
+        "displayName": "Cookie Keeper host",
+        "simpleValueType": true,
+        "canBeEmptyString": false,
+        "help": "",
+        "valueHint": "https://ck.yourdomain.com"
+      },
+      {
+        "type": "TEXT",
+        "name": "user_agent",
+        "displayName": "User Agent",
+        "simpleValueType": true,
+        "valueHint": "{{journify_user_agent}}",
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ]
       }
     ],
     "enablingConditions": [
@@ -1270,6 +1293,13 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
 
 // helpers
 
+function isSafari(ua) {
+    if (!ua) {
+        return false;
+    }
+    return ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1;
+}
+
 const fail = msg => {
     log(LOG_PREFIX + 'Error: ' + msg);
     return data.gtmOnFailure();
@@ -1291,7 +1321,9 @@ const init = () => {
     }
 
     if (dataHasField('cookie_domain')) {
-        settings.options.cookie = { domain: data.cookie_domain };
+        settings.options.cookie = {
+            domain: data.cookie_domain,
+        };
     }
 
     if (dataHasField('session_duration_min')){
@@ -1304,7 +1336,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-
+    
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1314,7 +1346,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-
+   
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
@@ -1633,7 +1665,11 @@ let dataLayerPageName = null;
 let dataLayerGroupId = null;
 
 if (data.tag_type == 'init') {
-    const sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
+    let sdkCDNHost = data.cdn_host || DEFAULT_SDK_CDN_HOST;
+    if(data.cookie_keeper_host && isSafari(data.user_agent)){
+        sdkCDNHost = data.cookie_keeper_host;
+    }
+
     const sdkVersion = data.sdk_version || DEFAULT_SDK_VERSION;
     const jsScriptURL = sdkCDNHost +'/' + encodeUri('@journifyio/js-sdk@'+ sdkVersion +'/journifyio.min.js');
     injectScript(jsScriptURL, init, onfailure, 'journify');
@@ -1806,7 +1842,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://static.journify.io/@journifyio/js-sdk@*"
+                "string": "https://*.journify.io/*"
               }
             ]
           }
