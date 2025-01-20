@@ -2,6 +2,9 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
+  - sha: dfcc41bfb0ac0a63fc634066d22f023df37819c2
+    changeNotes: |2
+      Add https to default CDN host value
   - sha: 3790dcf1f60bfedc79ae344f280df5a704b7eb35
     changeNotes: |2
       Cookie-keeper
