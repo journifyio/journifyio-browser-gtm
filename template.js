@@ -10,7 +10,7 @@ const readTitle = require('readTitle');
 const encodeUri = require('encodeUri');
 
 // constants
-const DEFAULT_SDK_CDN_HOST = 'static.journify.io';
+const DEFAULT_SDK_CDN_HOST = 'https://static.journify.io';
 const DEFAULT_SDK_VERSION = 'latest';
 const LOG_PREFIX = '[Journify / GTM] ';
 const JOURNIFY_WINDOW_KEY = 'journify';
