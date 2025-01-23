@@ -303,7 +303,7 @@ const dataLayerEvent = () => {
 const initDataLayerVariables = () => {
     const eventNameKey = dataHasField('data_layer_event_name_key') ? data.data_layer_event_name_key : 'event';
     dataLayerEventName = copyFromDataLayer(eventNameKey) || copyFromDataLayer('event_name');
-    dataLayerUserId = copyFromDataLayer('user_id');
+    dataLayerUserId = copyFromDataLayer('user_id') || data.user_id;
     dataLayerExternalIds = copyFromDataLayer('external_ids');
     dataLayerTraits = copyFromDataLayer('traits') || {};
 
@@ -475,7 +475,15 @@ const journifyWrapper = {
             recordCall((journify) => journify.group(groupId, traits));
         }
     },
-    track: (eventName, properties, traits) => {
+    track: (eventName, properties, traits = {}) => {
+        if (!traits) {
+            traits = {};
+        }
+
+        if (data.user_id) {
+            traits.userId = data.user_id;
+        }
+
         const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
         if (journify) {
             journify.track(eventName, properties, traits);
@@ -483,7 +491,15 @@ const journifyWrapper = {
             recordCall((journify) => journify.track(eventName, properties, traits));
         }
     },
-    page: (pageName, properties, traits) => {
+    page: (pageName, properties, traits = {}) => {
+        if (!traits) {
+            traits = {};
+        }
+
+        if (data.user_id) {
+            traits.userId = data.user_id;
+        }
+
         const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
         if (journify) {
             journify.page(pageName, properties, traits);

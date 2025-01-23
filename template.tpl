@@ -143,6 +143,21 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "tag_type",
         "paramValue": "identify",
         "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "track",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "page",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "tag_type",
+        "paramValue": "data_layer_event",
+        "type": "EQUALS"
       }
     ],
     "valueValidators": [
@@ -1628,6 +1643,13 @@ const journifyWrapper = {
         }
     },
     track: (eventName, properties, traits) => {
+        if (!traits) {
+            traits = {};
+        }
+        if (data.user_id) {
+            traits.userId = data.user_id;
+        }
+
         const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
         if (journify) {
             journify.track(eventName, properties, traits);
@@ -1636,6 +1658,14 @@ const journifyWrapper = {
         }
     },
     page: (pageName, properties, traits) => {
+        if (!traits) {
+            traits = {};
+        }
+
+        if (data.user_id) {
+            traits.userId = data.user_id;
+        }
+
         const journify = copyFromWindow(JOURNIFY_WINDOW_KEY);
         if (journify) {
             journify.page(pageName, properties, traits);
