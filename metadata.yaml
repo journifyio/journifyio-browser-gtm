@@ -2,6 +2,9 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
+  - sha: a7e0d5fbcef38773d9f43a611dcefb2f73ef37ad
+    changeNotes: |2
+      Add user ID to track and page events
   - sha: dfcc41bfb0ac0a63fc634066d22f023df37819c2
     changeNotes: |2
       Add https to default CDN host value
