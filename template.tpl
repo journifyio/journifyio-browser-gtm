@@ -1846,10 +1846,6 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "https://*.journify.io/*"
-              },
-              {
-                "type": 1,
-                "string": "https://*.journify.dev/*"
               }
             ]
           }
