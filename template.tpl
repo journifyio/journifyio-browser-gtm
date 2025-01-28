@@ -1341,6 +1341,9 @@ const init = () => {
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
         };
+        if(dataHasField('cookie_keeper_host')){
+            settings.options.httpCookieServiceOptions.enablePolling = true;
+        }
     }
 
     if (data.auto_capture_pii === true){
@@ -1843,6 +1846,10 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "https://*.journify.io/*"
+              },
+              {
+                "type": 1,
+                "string": "https://*.journify.dev/*"
               }
             ]
           }
