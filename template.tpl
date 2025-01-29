@@ -162,7 +162,14 @@ ___TEMPLATE_PARAMETERS___
     ],
     "valueValidators": [
       {
-        "type": "NON_EMPTY"
+        "type": "NON_EMPTY",
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "identify",
+            "type": "EQUALS"
+          }
+        ]
       }
     ]
   },
@@ -1177,6 +1184,8 @@ const readTitle = require('readTitle');
 const encodeUri = require('encodeUri');
 
 // constants
+const GTM_UNIQUE_EVENT_ID = copyFromDataLayer("gtm.uniqueEventId");
+const DATA_LAYER = copyFromWindow('dataLayer');
 const DEFAULT_SDK_CDN_HOST = 'https://static.journify.io';
 const DEFAULT_SDK_VERSION = 'latest';
 const LOG_PREFIX = '[Journify / GTM] ';
@@ -1308,6 +1317,20 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
 
 // helpers
 
+function copyFromDataLayerWrapper(key) {
+    if (!DATA_LAYER) {
+        return null;
+    }
+
+    for (let i = DATA_LAYER.length - 1; i >= 0; i--) {
+        if (DATA_LAYER[i]["gtm.uniqueEventId"] === GTM_UNIQUE_EVENT_ID) {
+            return DATA_LAYER[i][key];
+        }
+    }
+
+    return null;
+}
+
 function isSafari(ua) {
     if (!ua) {
         return false;
@@ -1351,7 +1374,7 @@ const init = () => {
     if (dataHasField('cdn_host')) {
         settings.cdnHost = data.cdn_host;
     }
-    
+
     if (dataHasField('http_cookie_service_renew_endpoint')){
         settings.options.httpCookieServiceOptions = {
             renewUrl: data.http_cookie_service_renew_endpoint
@@ -1364,7 +1387,7 @@ const init = () => {
     if (data.auto_capture_pii === true){
         settings.options.autoCapturePII = data.auto_capture_pii;
     }
-   
+
     if (data.enable_hashing === true){
         settings.options.enableHashing = true;
     }
@@ -1472,10 +1495,10 @@ const dataLayerEvent = () => {
 
 const initDataLayerVariables = () => {
     const eventNameKey = dataHasField('data_layer_event_name_key') ? data.data_layer_event_name_key : 'event';
-    dataLayerEventName = copyFromDataLayer(eventNameKey) || copyFromDataLayer('event_name');
-    dataLayerUserId = copyFromDataLayer('user_id');
-    dataLayerExternalIds = copyFromDataLayer('external_ids');
-    dataLayerTraits = copyFromDataLayer('traits') || {};
+    dataLayerEventName = copyFromDataLayerWrapper(eventNameKey) || copyFromDataLayerWrapper('event_name');
+    dataLayerUserId = copyFromDataLayerWrapper('user_id');
+    dataLayerExternalIds = copyFromDataLayerWrapper('external_ids');
+    dataLayerTraits = copyFromDataLayerWrapper('traits') || {};
 
     const traitsKeys = {
         'user_data.email_address': 'email',
@@ -1489,11 +1512,11 @@ const initDataLayerVariables = () => {
         'user_data.country': 'country_code',
     };
 
-    dataLayerPageName = copyFromDataLayer('name');
+    dataLayerPageName = copyFromDataLayerWrapper('name');
 
     for (let key in traitsKeys) {
         const journifyKey = traitsKeys[key];
-        const value = copyFromDataLayer(key);
+        const value = copyFromDataLayerWrapper(key);
         if (value) {
             dataLayerTraits[journifyKey] = value;
         }
@@ -1512,21 +1535,21 @@ const initDataLayerVariables = () => {
     if (dataHasField('data_layer_trait_keys')) {
         for (let i = 0; i < data.data_layer_trait_keys.length; i++) {
             const key = data.data_layer_trait_keys[i].trait_key;
-            const value = copyFromDataLayer(key);
+            const value = copyFromDataLayerWrapper(key);
             if (value) {
                 dataLayerTraits[key] = value;
             }
         }
     }
 
-    dataLayerGroupId = copyFromDataLayer('group_id');
+    dataLayerGroupId = copyFromDataLayerWrapper('group_id');
 
     dataLayerEventProperties = copyKeysFromDataLayer(STANDARD_DATA_LAYER_EVENT_KEYS);
 
     if (dataHasField('additional_data_layer_properties')) {
         for (let i = 0; i < data.additional_data_layer_properties.length; i++) {
             const key = data.additional_data_layer_properties[i].property_key;
-            const value = copyFromDataLayer(key);
+            const value = copyFromDataLayerWrapper(key);
             if (value) {
                 dataLayerEventProperties[key] = value;
             }
@@ -1538,12 +1561,12 @@ const initDataLayerVariables = () => {
         copyObj(dataLayerEventProperties, props);
     }
 
-    const ecommerce = copyFromDataLayer('ecommerce');
+    const ecommerce = copyFromDataLayerWrapper('ecommerce');
     if (getType(ecommerce) == 'object') {
         copyObj(dataLayerEventProperties, ecommerce);
     }
 
-    const nestedProperties = copyFromDataLayer('properties');
+    const nestedProperties = copyFromDataLayerWrapper('properties');
     if (getType(nestedProperties) == 'object') {
         copyObj(dataLayerEventProperties, nestedProperties);
     }
@@ -1615,7 +1638,7 @@ const copyObj = (target, source) => {
 const copyKeysFromDataLayer = (keys) => {
     const copy = {};
     keys.forEach((key) => {
-        const value = copyFromDataLayer(key);
+        const value = copyFromDataLayerWrapper(key);
         if (value) {
             copy[key] = value;
         }
@@ -1848,6 +1871,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 8,
                     "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "dataLayer"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
                   }
                 ]
               }
