@@ -2,6 +2,9 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
+  - sha: 867e1e39040fbf36617ae7aa909f04a5d9da8a9e
+    changeNotes: |2
+      enable polling
   - sha: a7e0d5fbcef38773d9f43a611dcefb2f73ef37ad
     changeNotes: |2
       Add user ID to track and page events
