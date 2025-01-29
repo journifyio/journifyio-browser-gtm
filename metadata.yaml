@@ -2,6 +2,9 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
+  - sha: 8ec0d1da4aaf6a448fbd103884b055135e948af0
+    changeNotes: |2
+      Add copyFromDataLayerWrapper
   - sha: 867e1e39040fbf36617ae7aa909f04a5d9da8a9e
     changeNotes: |2
       enable polling
