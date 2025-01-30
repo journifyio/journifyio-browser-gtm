@@ -461,7 +461,7 @@ ___TEMPLATE_PARAMETERS___
             "event_type": "track"
           },
           {
-            "event_name": "gtm.init",
+            "event_name": "gtm.dom",
             "event_type": "page"
           },
           {
