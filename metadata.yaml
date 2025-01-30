@@ -2,6 +2,9 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
+  - sha: 4e5ba57ed36f46aabf0d09deeaa5698b508796f8
+    changeNotes: |2
+      Use gtm.dom event
   - sha: 8ec0d1da4aaf6a448fbd103884b055135e948af0
     changeNotes: |2
       Add copyFromDataLayerWrapper
