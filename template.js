@@ -150,7 +150,7 @@ function copyFromDataLayerWrapper(key) {
 
     for (let i = DATA_LAYER.length - 1; i >= 0; i--) {
         if (DATA_LAYER[i]["gtm.uniqueEventId"] === GTM_UNIQUE_EVENT_ID) {
-            return DATA_LAYER[i][key]
+            return DATA_LAYER[i][key];
         }
     }
 
@@ -248,7 +248,15 @@ const init = () => {
 
 const dataHasField = (fieldKey) => {
     const val = data[fieldKey];
-    return val && val.length > 0;
+    switch (getType(val)) {
+        case 'array':
+            return val.length > 0;
+        case 'string':
+            return val.trim().length > 0;
+        default:
+            break;
+    }
+    return typeof val !== 'undefined' && val !== null;
 };
 
 const identify = () => {
@@ -395,6 +403,10 @@ const initDataLayerVariables = () => {
     const nestedProperties = copyFromDataLayerWrapper('properties');
     if (getType(nestedProperties) == 'object') {
         copyObj(dataLayerEventProperties, nestedProperties);
+    }
+    if(dataHasField('user_id')){
+        dataLayerTraits.userId = data.user_id;
+        dataLayerUserId = dataLayerTraits.userId;
     }
 };
 
