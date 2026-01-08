@@ -1422,7 +1422,15 @@ const init = () => {
 
 const dataHasField = (fieldKey) => {
     const val = data[fieldKey];
-    return val && val.length > 0;
+    switch (getType(val)) {
+        case 'array':
+            return val.length > 0;
+        case 'string':
+            return val.trim().length > 0;
+        default:
+            break;
+    }
+    return typeof val !== 'undefined' && val !== null;
 };
 
 const identify = () => {
@@ -1569,6 +1577,10 @@ const initDataLayerVariables = () => {
     const nestedProperties = copyFromDataLayerWrapper('properties');
     if (getType(nestedProperties) == 'object') {
         copyObj(dataLayerEventProperties, nestedProperties);
+    }
+    if(dataHasField('user_id')){
+        dataLayerTraits.userId = data.user_id;
+        dataLayerUserId = dataLayerTraits.userId;
     }
 };
 
