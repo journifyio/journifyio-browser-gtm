@@ -960,7 +960,7 @@ ___TEMPLATE_PARAMETERS___
       {
         "type": "SIMPLE_TABLE",
         "name": "data_layer_prop_values",
-        "displayName": "Additional properties",
+        "displayName": "Additional properties (will override)",
         "simpleTableColumns": [
           {
             "defaultValue": "",
