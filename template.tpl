@@ -1315,6 +1315,7 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'visible'
 ];
 
+
 // helpers
 
 function copyFromDataLayerWrapper(key) {
