@@ -2,6 +2,9 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
+  - sha: e69ea1738f1e4fa8f19f83c5b33c84df37089652
+    changeNotes: |2
+      Fix Additional properties does not override the values
   - sha: cf76817f0693c369bf0859fcb2e6d30efc8d8311
     changeNotes: |2
       Fix user ID handling in data layer and improve data validation checks
