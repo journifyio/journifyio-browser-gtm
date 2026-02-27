@@ -8,6 +8,8 @@ const copyFromDataLayer = require('copyFromDataLayer');
 const getType = require('getType');
 const readTitle = require('readTitle');
 const encodeUri = require('encodeUri');
+const isConsentGranted = require('isConsentGranted');
+const addConsentListener = require('addConsentListener');
 
 // constants
 const GTM_UNIQUE_EVENT_ID = copyFromDataLayer("gtm.uniqueEventId");
@@ -140,6 +142,15 @@ const STANDARD_DATA_LAYER_EVENT_KEYS = [
     'virtual_currency_name',
     'visible'
 ];
+const GOOGLE_CONSENT_V2_KEYS = [
+    'ad_storage',
+    'ad_user_data',
+    'ad_personalization',
+    'analytics_storage',
+    'functionality_storage',
+    'personalization_storage',
+    'security_storage'
+];
 
 // helpers
 
@@ -177,8 +188,16 @@ const init = () => {
 
     const settings = {
         writeKey: data.write_key,
-        options: {}
+        options: {
+            initialConsent: getConsentObject(journify),
+        }
     };
+
+    GOOGLE_CONSENT_V2_KEYS.forEach((key) => {
+        addConsentListener(key, () => {
+            journify.updateConsent(getConsentObject(journify));
+        });
+    });
 
     if (dataHasField('api_host')) {
         settings.apiHost = data.api_host;
@@ -244,6 +263,14 @@ const init = () => {
 
     log(LOG_PREFIX + 'Success: initializing Journify SDK');
     data.gtmOnSuccess();
+};
+
+const getConsentObject = (journify) => {
+    const consent = {};
+    GOOGLE_CONSENT_V2_KEYS.forEach((key) => {
+        consent[key] = isConsentGranted(key) || false;
+    });
+    return journify.fromGoogleConsentV2(consent);
 };
 
 const dataHasField = (fieldKey) => {
@@ -402,9 +429,9 @@ const initDataLayerVariables = () => {
     if(dataHasField('user_id')){
         dataLayerTraits.userId = data.user_id;
         dataLayerUserId = dataLayerTraits.userId;
-	}
-	
-	if (dataHasField('data_layer_prop_values')) {
+    }
+
+    if (dataHasField('data_layer_prop_values')) {
         const props = makeTableMap(data.data_layer_prop_values || [], 'key', 'value');
         copyObj(dataLayerEventProperties, props);
     }
