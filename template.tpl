@@ -1360,16 +1360,18 @@ const init = () => {
         return fail('`write_key` setting is required when calling `load`');
     }
 
+    const initialConsent = getConsentObject(journify)
     const settings = {
         writeKey: data.write_key,
         options: {
-            initialConsent: getConsentObject(journify),
+            initialConsent,
         }
     };
 
     GOOGLE_CONSENT_V2_KEYS.forEach((key) => {
         addConsentListener(key, () => {
-            journify.updateConsent(getConsentObject(journify));
+            const newConsent = getConsentObject(journify)
+            journify.updateConsent(newConsent);
         });
     });
 
@@ -1603,9 +1605,9 @@ const initDataLayerVariables = () => {
     if(dataHasField('user_id')){
         dataLayerTraits.userId = data.user_id;
         dataLayerUserId = dataLayerTraits.userId;
-	}
+    }
 
-	if (dataHasField('data_layer_prop_values')) {
+    if (dataHasField('data_layer_prop_values')) {
         const props = makeTableMap(data.data_layer_prop_values || [], 'key', 'value');
         copyObj(dataLayerEventProperties, props);
     }
@@ -1797,7 +1799,6 @@ if (data.tag_type == 'init') {
 
     data.gtmOnSuccess();
 }
-
 
 ___WEB_PERMISSIONS___
 

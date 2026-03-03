@@ -186,16 +186,18 @@ const init = () => {
         return fail('`write_key` setting is required when calling `load`');
     }
 
+    const initialConsent = getConsentObject(journify)
     const settings = {
         writeKey: data.write_key,
         options: {
-            initialConsent: getConsentObject(journify),
+            initialConsent,
         }
     };
 
     GOOGLE_CONSENT_V2_KEYS.forEach((key) => {
         addConsentListener(key, () => {
-            journify.updateConsent(getConsentObject(journify));
+            const newConsent = getConsentObject(journify)
+            journify.updateConsent(newConsent);
         });
     });
 
