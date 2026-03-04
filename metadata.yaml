@@ -2,7 +2,7 @@ homepage: "https://www.journify.io/"
 documentation: "https://docs.journify.io/sources/google-tag-manager-browser-template"
 versions:
   # Latest version
-  - sha: 624ee2927b12ccd9a64e3bba422c3e751fa96e94
+  - sha: 04bfcac8abba884ac5a33d78e93e1b9ff61a150e
     changeNotes: |2
       Add support for Google Consent V2
   - sha: e69ea1738f1e4fa8f19f83c5b33c84df37089652
