@@ -1620,9 +1620,9 @@ const initDataLayerVariables = () => {
     if(dataHasField('user_id')){
         dataLayerTraits.userId = data.user_id;
         dataLayerUserId = dataLayerTraits.userId;
-    }
-
-    if (dataHasField('data_layer_prop_values')) {
+	}
+	
+	if (dataHasField('data_layer_prop_values')) {
         const props = makeTableMap(data.data_layer_prop_values || [], 'key', 'value');
         copyObj(dataLayerEventProperties, props);
     }
