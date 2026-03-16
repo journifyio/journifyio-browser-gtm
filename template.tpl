@@ -87,6 +87,21 @@ ___TEMPLATE_PARAMETERS___
     ]
   },
   {
+    "type": "CHECKBOX",
+    "name": "enable_consent",
+    "checkboxText": "Forward Google Consent Mode V2 signals to Journify",
+    "simpleValueType": true,
+    "defaultValue": false,
+    "help": "Enabling this option will read Google Consent Mode V2 signals from GTM and pass them to Journify.",
+    "enablingConditions": [
+      {
+        "paramName": "tag_type",
+        "paramValue": "init",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
     "type": "TEXT",
     "name": "sdk_version",
     "displayName": "Journify SDK version",
@@ -1059,21 +1074,6 @@ ___TEMPLATE_PARAMETERS___
           }
         ],
         "help": "Enabling this option will hash all first-party data on the client side."
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "enable_consent",
-        "checkboxText": "Forward Google Consent Mode V2 signals to Journify",
-        "simpleValueType": true,
-        "defaultValue": false,
-        "help": "Enabling this option will read Google Consent Mode V2 signals from GTM and pass them to Journify.",
-        "enablingConditions": [
-          {
-            "paramName": "tag_type",
-            "paramValue": "init",
-            "type": "EQUALS"
-          }
-        ]
       },
       {
         "type": "TEXT",
