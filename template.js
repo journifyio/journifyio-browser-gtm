@@ -186,20 +186,20 @@ const init = () => {
         return fail('`write_key` setting is required when calling `load`');
     }
 
-    const initialConsent = getConsentObject(journify);
     const settings = {
         writeKey: data.write_key,
-        options: {
-            initialConsent: initialConsent
-        }
+        options: {}
     };
 
-    GOOGLE_CONSENT_V2_KEYS.forEach((key) => {
-        addConsentListener(key, () => {
-            const newConsent = getConsentObject(journify);
-            journify.updateConsent(newConsent);
+    if (data.enable_consent) {
+        settings.options.initialConsent = getConsentObject(journify);
+        GOOGLE_CONSENT_V2_KEYS.forEach((key) => {
+            addConsentListener(key, () => {
+                const newConsent = getConsentObject(journify);
+                journify.updateConsent(newConsent);
+            });
         });
-    });
+    }
 
     if (dataHasField('api_host')) {
         settings.apiHost = data.api_host;

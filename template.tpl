@@ -1061,6 +1061,21 @@ ___TEMPLATE_PARAMETERS___
         "help": "Enabling this option will hash all first-party data on the client side."
       },
       {
+        "type": "CHECKBOX",
+        "name": "enable_consent",
+        "checkboxText": "Forward Google Consent Mode V2 signals to Journify",
+        "simpleValueType": true,
+        "defaultValue": false,
+        "help": "Enabling this option will read Google Consent Mode V2 signals from GTM and pass them to Journify.",
+        "enablingConditions": [
+          {
+            "paramName": "tag_type",
+            "paramValue": "init",
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
         "type": "TEXT",
         "name": "phone_country_code",
         "displayName": "Phone country code (without the + sign)",
@@ -1360,20 +1375,20 @@ const init = () => {
         return fail('`write_key` setting is required when calling `load`');
     }
 
-    const initialConsent = getConsentObject(journify);
     const settings = {
         writeKey: data.write_key,
-        options: {
-            initialConsent: initialConsent
-        }
+        options: {}
     };
 
-    GOOGLE_CONSENT_V2_KEYS.forEach((key) => {
-        addConsentListener(key, () => {
-            const newConsent = getConsentObject(journify);
-            journify.updateConsent(newConsent);
+    if (data.enable_consent) {
+        settings.options.initialConsent = getConsentObject(journify);
+        GOOGLE_CONSENT_V2_KEYS.forEach((key) => {
+            addConsentListener(key, () => {
+                const newConsent = getConsentObject(journify);
+                journify.updateConsent(newConsent);
+            });
         });
-    });
+    }
 
     if (dataHasField('api_host')) {
         settings.apiHost = data.api_host;
