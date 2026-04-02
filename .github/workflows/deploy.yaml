@@ -15,28 +15,29 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Check Modified Files
-        id: check_files
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47 pinned
+        with:
+          files: template.tpl
+
+      - name: sanitize PR title
+        id: sanitize_title
         run: |
-          changed_files=$(git diff --name-only HEAD^1 HEAD)
-          echo "Changed files: $changed_files"
-          if ! echo "$changed_files" | grep -q "^template.tpl$"; then
-            echo "template.tpl was not modified. Skipping workflow."
-            echo "template_tpl_changed=false" >> $GITHUB_ENV
-          else
-            echo "template_tpl_changed=true" >> $GITHUB_ENV
-          fi
+          sanitized_title=$(echo "${{ github.event.pull_request.title }}" | tr -d '\n' | sed 's/"/\\"/g' | sed 's/`/\\`/g')
+          echo "sanitized_title=$sanitized_title" >> $GITHUB_OUTPUT
+
 
       - name: Update YAML File
-        if: env.template_tpl_changed == 'true'
+        if: steps.changed-files.outputs.any_modified == 'true'
         run: |
-          new_entry="  - sha: ${{ github.event.pull_request.merge_commit_sha }}\n    changeNotes: |2\n      ${{ github.event.pull_request.title }}"
+          new_entry="  - sha: ${{ github.event.pull_request.merge_commit_sha }}\n    changeNotes: |2\n      ${{ steps.sanitize_title.outputs.sanitized_title }}"
           sed -i "/# Latest version/a\\$new_entry" metadata.yaml
 
       - name: Create Pull Request
         id: create_pr
         uses: peter-evans/create-pull-request@v5
-        if: env.template_tpl_changed == 'true'
+        if: steps.changed-files.outputs.any_modified == 'true'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Update metadata.yaml with latest changes from `${{ github.event.pull_request.head.ref }}` branch"
@@ -51,7 +52,7 @@ jobs:
 
       - name: Slack notification - Deployed
         uses: slackapi/slack-github-action@v1.23.0
-        if: env.template_tpl_changed == 'true'
+        if: steps.changed-files.outputs.any_modified == 'true'
         with:
           channel-id: 'C03KN9Q2S7P'
           payload: |
